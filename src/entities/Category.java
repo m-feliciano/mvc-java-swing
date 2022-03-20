@@ -18,7 +18,7 @@ public class Category {
 		super();
 		this.name = name;
 	}
-	
+
 	public Category(int id, String name) {
 		super();
 		this.id = id;
@@ -51,9 +51,9 @@ public class Category {
 
 	@Override
 	public String toString() {
-		return id + ", " + name;
+		return id + ". " + name;
 	}
-
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
