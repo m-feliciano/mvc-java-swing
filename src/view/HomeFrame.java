@@ -97,14 +97,28 @@ public class HomeFrame extends JFrame {
 		int eixoX = 800, eixoY = 590;
 		int paddingLeft = 45;
 
-		logoutBtn = new JButton("Logout");
-		int[] logoutBtnBounds = { eixoX - 135, 10, 80, 25 };
-		addButton(container, logoutBtn, logoutBtnBounds, new Color(248, 249, 250), Color.BLACK);
+		buildComboCategory(container, paddingLeft);
+		buildInputs(container, eixoX, paddingLeft);
+		buildButtons(container, eixoX, paddingLeft);
+		buildTable(container, paddingLeft);
 
-		editUserBtn = new JButton("Profile");
-		int[] editUserBtnBounds = { eixoX - 225, 10, 80, 25 };
-		addButton(container, editUserBtn, editUserBtnBounds, Color.BLUE, Color.WHITE);
+		setSize(eixoX, eixoY);
+		setVisible(true);
+		setResizable(false);
+		setLocationRelativeTo(null);
+	}
 
+	private void buildComboCategory(Container container, int paddingLeft) {
+		categoryCombo = new JComboBox<>();
+		categoryCombo.setBounds(paddingLeft, 180, 170, 25);
+		container.add(categoryCombo);
+
+		List<Category> categories = categoryController.list();
+		categories.forEach(c -> categoryCombo.addItem(c));
+	}
+
+	private void buildInputs(Container container, int eixoX, int paddingLeft) {
+		// NAME
 		JLabel nameLabel = new JLabel("PRODUCT NAME");
 		int[] nameLabelBounds = { paddingLeft, 10, 240, 20 };
 		addLabel(container, nameLabel, nameLabelBounds, null, Color.BLACK);
@@ -113,6 +127,7 @@ public class HomeFrame extends JFrame {
 		nameTxt.setBounds(paddingLeft, 30, 280, 25);
 		container.add(nameTxt);
 
+		// DESCRIPTION
 		JLabel descriptionLabel = new JLabel("PRODUCT DESCRIPTION");
 		int[] descriptionBounds = { paddingLeft, 60, 240, 20 };
 		addLabel(container, descriptionLabel, descriptionBounds, null, Color.BLACK);
@@ -127,6 +142,7 @@ public class HomeFrame extends JFrame {
 		addLabel(container, priceLabel, priceBounds, null, Color.BLACK);
 
 		priceTxt = new JTextField();
+		priceTxt.setHorizontalAlignment(SwingConstants.RIGHT);
 		priceTxt.setBounds(paddingLeft, 130, 280, 25);
 		container.add(priceTxt);
 
@@ -135,12 +151,21 @@ public class HomeFrame extends JFrame {
 		int[] categoryBounds = { paddingLeft, 155, 240, 25 };
 		addLabel(container, categoryLabel, categoryBounds, null, Color.BLACK);
 
-		categoryCombo = new JComboBox<>();
-		categoryCombo.setBounds(paddingLeft, 180, 170, 25);
-		container.add(categoryCombo);
+		// TOTAL DOC
+		priceTotalLabel = new JLabel();
+		priceTotalLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		int[] priceTotalBounds = { eixoX - 275, 500, 200, 25 };
+		addLabel(container, priceTotalLabel, priceTotalBounds, null, Color.BLACK);
+	}
 
-		List<Category> categories = categoryController.list();
-		categories.forEach(c -> categoryCombo.addItem(c));
+	private void buildButtons(Container container, int eixoX, int paddingLeft) {
+		logoutBtn = new JButton("Logout");
+		int[] logoutBtnBounds = { eixoX - 135, 10, 80, 25 };
+		addButton(container, logoutBtn, logoutBtnBounds, new Color(248, 249, 250), Color.BLACK);
+
+		editUserBtn = new JButton("Profile");
+		int[] editUserBtnBounds = { eixoX - 225, 10, 80, 25 };
+		addButton(container, editUserBtn, editUserBtnBounds, Color.BLUE, Color.WHITE);
 
 		categoryManagerBtn = new JButton("Manager");
 		int[] catManagerBounds = { paddingLeft + 180, 180, 100, 25 };
@@ -169,19 +194,6 @@ public class HomeFrame extends JFrame {
 		pageNextBtn = new JButton(">");
 		int[] pageNextBtnBounds = { 400, 500, 50, 25 };
 		addButton(container, pageNextBtn, pageNextBtnBounds, LIGHT_BUTTON, null);
-
-		// TOTAL DOC
-		priceTotalLabel = new JLabel();
-		priceTotalLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		int[] priceTotalBounds = { eixoX - 275, 500, 200, 25 };
-		addLabel(container, priceTotalLabel, priceTotalBounds, null, Color.BLACK);
-
-		buildTable(container, paddingLeft);
-
-		setSize(eixoX, eixoY);
-		setVisible(true);
-		setResizable(false);
-		setLocationRelativeTo(null);
 	}
 
 	private void buildTable(Container container, int paddingLeft) {
@@ -243,7 +255,6 @@ public class HomeFrame extends JFrame {
 	private void update() {
 		Object obj = model.getValueAt(table.getSelectedRow(), 0);
 		if (!isInstanceOf(obj)) {
-			showMessage();
 		} else {
 			Integer id = (Integer) obj;
 			String name = (String) model.getValueAt(table.getSelectedRow(), 1);
@@ -257,7 +268,6 @@ public class HomeFrame extends JFrame {
 	private void delete() {
 		Object obj = model.getValueAt(table.getSelectedRow(), 0);
 		if (!isInstanceOf(obj)) {
-			showMessage();
 		} else {
 			Integer id = (Integer) obj;
 			this.productController.delete(id);
@@ -266,29 +276,38 @@ public class HomeFrame extends JFrame {
 		}
 	}
 
-	private void showMessage() {
-		JOptionPane.showMessageDialog(this, "Please, select an row");
-	}
-
 	private boolean save() {
-		boolean validTxt = nameTxt.getText().isEmpty() || descriptionTxt.getText().isEmpty();
-		BigDecimal price = new BigDecimal(priceTxt.getText());
-		int validPrice = price.compareTo(BigDecimal.ONE);
-		System.out.println(price);
-		if (validTxt) {
+		boolean invalidTxt = nameTxt.getText().isEmpty() || descriptionTxt.getText().isEmpty();
+		BigDecimal price = convertToPrice(priceTxt.getText());
+		if (invalidTxt) {
 			JOptionPane.showMessageDialog(this, "must provider an name and description!");
 			return false;
-		} else if (validPrice <= 0) {
-			JOptionPane.showMessageDialog(this, "must provider an valid price. ex.: 10.00");
-			return false;
-		} else {
-			Product product = new Product(nameTxt.getText(), descriptionTxt.getText(), price);
-//			Category category = (Category) categoryCombo.getSelectedItem();
-//			product.setCategoryId(category.getId());
-			this.productController.save(product);
-			JOptionPane.showMessageDialog(this, "successfully saved");
-			return true;
 		}
+		if (price == null || price.compareTo(BigDecimal.ONE) < 0) {
+			JOptionPane.showMessageDialog(this, "price must be greater than R$1.00. format.: 10.00");
+			return false;
+		}
+		
+		Product product = new Product(nameTxt.getText(), descriptionTxt.getText(), price);
+//		Category category = (Category) categoryCombo.getSelectedItem();
+//		product.setCategoryId(category.getId());
+		this.productController.save(product);
+		JOptionPane.showMessageDialog(this, "successfully saved");
+		return true;
+	}
+
+	private BigDecimal convertToPrice(String str) {
+		boolean validString = str != null && !str.isBlank() && !str.isEmpty();
+		if (validString) {
+			try {
+				return new BigDecimal(str);
+			} catch (Exception e) {
+				throw new IllegalArgumentException("Invalid price value");
+			} finally {
+				this.priceTxt.setText("0");
+			}
+		}
+		return null;
 	}
 
 	private void populateTable() {
@@ -297,8 +316,8 @@ public class HomeFrame extends JFrame {
 		products.forEach(p -> model.addRow(new Object[] { p.getId(), p.getName(), p.getDescription(),
 				("R$ " + p.getPrice()), sdf.format(p.getRegisterDate()) }));
 		Optional<BigDecimal> totalPrice = products.stream().map(Product::getPrice).reduce((t, u) -> u.add(t));
-		if(totalPrice.isPresent() && totalPrice.get().compareTo(BigDecimal.ONE) > 0) {
-			priceTotalLabel.setText("Document price: R$" + totalPrice.get());			
+		if (totalPrice.isPresent() && totalPrice.get().compareTo(BigDecimal.ONE) > 0) {
+			priceTotalLabel.setText("Document price: R$" + totalPrice.get());
 		}
 	}
 
