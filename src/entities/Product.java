@@ -1,5 +1,6 @@
 package entities;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
@@ -10,22 +11,25 @@ public class Product {
 	private String name;
 	private String description;
 	private Date registerDate;
+	private BigDecimal price;
 
 	public Product() {
 		super();
 	}
 
-	public Product(String name, String description) {
+	public Product(String name, String description, BigDecimal price) {
 		super();
 		this.name = name;
 		this.description = description;
+		this.price = price;
 	}
 
-	public Product(Integer id, String name, String description) {
+	public Product(Integer id, String name, String description, BigDecimal price) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.description = description;
+		this.price = price;
 	}
 
 	public Integer getId() {
@@ -60,6 +64,13 @@ public class Product {
 		this.registerDate = registerDate;
 	}
 
+	public BigDecimal getPrice() {
+		return price;
+	}
+
+	public void setPrice(BigDecimal price) {
+		this.price = price;
+	}
 
 	@Override
 	public String toString() {
@@ -71,10 +82,11 @@ public class Product {
 		sb.append(name);
 		sb.append(", DESCRIPTION= ");
 		sb.append(description);
+		sb.append(", PRICE= ");
+		sb.append(price);
 		sb.append(", REGISTER DATE= ");
 		sb.append(sdf.format(registerDate));
 		return sb.toString();
-
 	}
 
 	@Override

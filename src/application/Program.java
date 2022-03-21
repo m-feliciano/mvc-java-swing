@@ -2,12 +2,12 @@ package application;
 
 import javax.swing.WindowConstants;
 
-import view.Frame;
+import view.HomeFrame;
 
-public class MainFrame {
+public class Program {
 	
 	public static void main(String[] args) {
-		Frame frame = new Frame();
+		HomeFrame frame = new HomeFrame();
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 	}
 

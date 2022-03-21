@@ -32,7 +32,8 @@ public class ProductDAO {
 					prod.setId(rs.getInt(1));
 					prod.setName(rs.getString(2));
 					prod.setDescription(rs.getString(3));
-					prod.setRegisterDate(rs.getTimestamp(4)); //
+					prod.setPrice(rs.getBigDecimal(4));
+					prod.setRegisterDate(rs.getTimestamp(5));
 				}
 				return prod;
 			} catch (Exception e) {
@@ -55,7 +56,8 @@ public class ProductDAO {
 					prod.setId(rs.getInt(1));
 					prod.setName(rs.getString(2));
 					prod.setDescription(rs.getString(3));
-					prod.setRegisterDate(rs.getTimestamp(4));
+					prod.setPrice(rs.getBigDecimal(4));
+					prod.setRegisterDate(rs.getTimestamp(5));
 					products.add(prod);
 				}
 				return products;
@@ -72,6 +74,7 @@ public class ProductDAO {
 
 			ps.setString(1, prod.getName());
 			ps.setString(2, prod.getDescription());
+			ps.setBigDecimal(3, prod.getPrice());
 
 			int affectedRows = ps.executeUpdate();
 			if (affectedRows > 0) {
@@ -135,7 +138,8 @@ public class ProductDAO {
 					prod.setId(rs.getInt(1));
 					prod.setName(rs.getString(2));
 					prod.setDescription(rs.getString(3));
-					prod.setRegisterDate(rs.getTimestamp(4));
+					prod.setPrice(rs.getBigDecimal(4));
+					prod.setRegisterDate(rs.getTimestamp(5));
 					products.add(prod);
 				}
 				return products;
