@@ -10,7 +10,6 @@ public class Product {
 	private String name;
 	private String description;
 	private Date registerDate;
-	private Integer categoryId;
 
 	public Product() {
 		super();
@@ -61,9 +60,6 @@ public class Product {
 		this.registerDate = registerDate;
 	}
 
-	public void setCategoryId(Integer categoryId) {
-		this.categoryId = categoryId;
-	}
 
 	@Override
 	public String toString() {

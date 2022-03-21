@@ -25,14 +25,14 @@ public class Frame extends JFrame {
 
 	private JTextField nameTxt, descriptionTxt;
 	private JComboBox<Category> categoryCombo;
-	private JButton saveBtn, editBtn, cleanBtn, deleteBtn;
+	private JButton saveBtn, editBtn, cleanBtn, deleteBtn, pageBeforeBtn, pageNextBtn, categoryManagerBtn, logoutBtn, EditUserBtn;
 	private JTable table;
 	private DefaultTableModel model;
 	private transient ProductController productController;
 	private transient CategoryController categoryController;
 
 	public Frame() {
-		super("Produtos");
+		super("CRUD MVC");
 		Container container = getContentPane();
 		setLayout(null);
 
@@ -93,8 +93,8 @@ public class Frame extends JFrame {
 			JOptionPane.showMessageDialog(this, "must provider an name and description!");
 		} else {
 			Product product = new Product(nameTxt.getText(), descriptionTxt.getText());
-			Category category = (Category) categoryCombo.getSelectedItem();
-			product.setCategoryId(category.getId());
+//			Category category = (Category) categoryCombo.getSelectedItem();
+//			product.setCategoryId(category.getId());
 			this.productController.save(product);
 			JOptionPane.showMessageDialog(this, "successfully saved");
 		}
@@ -127,38 +127,54 @@ public class Frame extends JFrame {
 	}
 
 	private void buildFrame(Container container) {
-		JLabel nameLabel = new JLabel("Product name");
+		
+		logoutBtn = new JButton("Logout");
+		logoutBtn.setBounds(590, 10, 80, 20);
+		logoutBtn.setBackground(new Color(248, 249, 250));
+		logoutBtn.setForeground(Color.BLACK);
+		container.add(logoutBtn);
+		
+		EditUserBtn = new JButton("Profile");
+		EditUserBtn.setBounds(500, 10, 80, 20);
+		EditUserBtn.setBackground(Color.BLUE);
+		EditUserBtn.setForeground(Color.WHITE);
+		container.add(EditUserBtn);
+		
+		JLabel nameLabel = new JLabel("PRODUCT NAME");
 		nameLabel.setBounds(10, 10, 240, 15);
 		nameLabel.setForeground(Color.BLACK);
+		container.add(nameLabel);
 
-		JLabel descriptionLabel = new JLabel("Product description");
+		JLabel descriptionLabel = new JLabel("PRODUCT DESCRIPTION");
 		descriptionLabel.setBounds(10, 50, 240, 15);
 		descriptionLabel.setForeground(Color.BLACK);
+		container.add(descriptionLabel);
 
-		JLabel categoryLabel = new JLabel("Product category");
+		JLabel categoryLabel = new JLabel("CATEGORY");
 		categoryLabel.setBounds(10, 90, 240, 15);
 		categoryLabel.setForeground(Color.BLACK);
-
-		container.add(nameLabel);
-		container.add(descriptionLabel);
 		container.add(categoryLabel);
 
 		nameTxt = new JTextField();
-		nameTxt.setBounds(10, 25, 265, 20);
+		nameTxt.setBounds(10, 25, 280, 20);
+		container.add(nameTxt);
+		
 		descriptionTxt = new JTextField();
-		descriptionTxt.setBounds(10, 65, 265, 20);
+		descriptionTxt.setBounds(10, 65, 280, 20);
+		container.add(descriptionTxt);
 
 		categoryCombo = new JComboBox<>();
-		categoryCombo.addItem(new Category(0, "Select"));
+//		categoryCombo.addItem(new Category(0, "Select"));
 		categoryCombo.setBounds(10, 105, 170, 20);
+		container.add(categoryCombo);
 
 		List<Category> categories = categoryController.list();
-
 		categories.forEach(c -> categoryCombo.addItem(c));
-
-		container.add(nameTxt);
-		container.add(descriptionTxt);
-		container.add(categoryCombo);
+		
+		categoryManagerBtn = new JButton("Manager");
+		categoryManagerBtn.setBounds(190, 105, 100, 20);
+		categoryManagerBtn.setBackground(Color.BLUE);
+		categoryManagerBtn.setForeground(Color.WHITE);
 
 		saveBtn = new JButton("Save");
 		saveBtn.setBounds(10, 145, 80, 20);
@@ -170,6 +186,7 @@ public class Frame extends JFrame {
 		cleanBtn.setBackground(new Color(108, 117, 125));
 		cleanBtn.setForeground(Color.WHITE);
 
+		container.add(categoryManagerBtn);
 		container.add(saveBtn);
 		container.add(cleanBtn);
 
@@ -185,11 +202,24 @@ public class Frame extends JFrame {
 		editBtn.setBounds(100, 420, 80, 20);
 		editBtn.setBackground(new Color(255, 197, 7));
 
+		Color pegaBtn = new Color(248, 249, 250);
+		pageBeforeBtn = new JButton("<");
+		pageBeforeBtn.setBounds(270, 420, 50, 20);
+		pageBeforeBtn.setBackground(pegaBtn);
+
+		pageNextBtn = new JButton(">");
+		pageNextBtn.setBounds(360, 420, 50, 20);
+		pageNextBtn.setBackground(pegaBtn);
+
 		container.add(deleteBtn);
 		container.add(editBtn);
+		container.add(pageBeforeBtn);
+		container.add(pageNextBtn);
+		container.add(categoryManagerBtn);
 
 		setSize(700, 500);
 		setVisible(true);
+		setResizable(false);
 		setLocationRelativeTo(null);
 	}
 
