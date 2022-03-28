@@ -1,133 +1,58 @@
 package dao;
 
-import entities.Product;
+import entities.Address;
 import infra.Query;
 
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-public class ProductDAO {
+public class AddressDAO {
 
-	private Connection conn;
+    private Connection conn;
 
-	public ProductDAO(Connection conn) {
-		this.conn = conn;
-	}
+    public AddressDAO(Connection conn) {
+        this.conn = conn;
+    }
 
-	public Product findById(int id) {
-		try (PreparedStatement ps = conn.prepareStatement(Query.SQL_PRODUCT_SELECT_BY_ID)) {
-			ps.setInt(1, id);
-			try (ResultSet rs = ps.executeQuery()) {
-				Product prod = null;
-				while (rs.next()) {
-					prod = instantiateProduct(rs);
-				}
-				return prod;
-			} catch (Exception e) {
-				throw new RuntimeException(e.getMessage());
-			}
-		} catch (SQLException e) {
-			throw new RuntimeException(e.getMessage());
-		}
-	}
+    public void update(Address address) {
+        try (PreparedStatement ps = conn.prepareStatement(Query.SQL_ADDRESS_UPDATE)) {
+            ps.setString(1, address.getCep());
+            ps.setString(2, address.getNumber());
+            ps.setString(3, address.getPlace());
+            ps.setString(4, address.getLocal());
+            ps.setInt(5, address.getUserId());
 
-	public List<Product> getProducts() {
-		try (PreparedStatement ps = conn.prepareStatement(Query.SQL_PRODUCTS_SELECT)) {
-			try (ResultSet rs = ps.executeQuery()) {
-				List<Product> products = new ArrayList<>();
-				Product prod = null;
-				while (rs.next()) {
-					prod = instantiateProduct(rs);
-					products.add(prod);
-				}
-				return products;
-			} catch (Exception e) {
-				throw new RuntimeException(e.getMessage());
-			}
-		} catch (SQLException e) {
-			throw new RuntimeException(e.getMessage());
-		}
-	}
+            int affectedRows = ps.executeUpdate();
+            if (affectedRows > 0) {
+                System.out.println("Successfully update address");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
 
-	public void insert(Product prod) {
-		try (PreparedStatement ps = conn.prepareStatement(Query.SQL_PRODUCT_INSERT, Statement.RETURN_GENERATED_KEYS)) {
-			ps.setString(1, prod.getName());
-			ps.setString(2, prod.getDescription());
-			ps.setBigDecimal(3, prod.getPrice());
-
-			int affectedRows = ps.executeUpdate();
-			if (affectedRows > 0) {
-				System.out.println("Successufully added product");
-				ResultSet rs = ps.getGeneratedKeys();
-				while (rs.next()) {
-					int id = rs.getInt(1);
-					System.out.println("Inserted ID: " + id);
-				}
-			}
-
-		} catch (SQLException e) {
-			throw new RuntimeException(e.getMessage());
-		}
-	}
-
-	public void update(Product prod) {
-		try (PreparedStatement ps = conn.prepareStatement(Query.SQL_PRODUCTS_UPDATE)) {
-			ps.setString(1, prod.getName());
-			ps.setString(2, prod.getDescription());
-			ps.setBigDecimal(3, prod.getPrice());
-			ps.setInt(4, prod.getId());
-
-			int affectedRows = ps.executeUpdate();
-			if (affectedRows > 0) {
-				System.out.println("Successufully update product");
-			}
-
-		} catch (SQLException e) {
-			throw new RuntimeException(e.getMessage());
-		}
-	}
-
-	public void delete(int id) {
-		try (PreparedStatement ps = conn.prepareStatement(Query.SQL_PRODUCT_DELETE)) {
-			ps.setInt(1, id);
-			ps.executeUpdate();
-			int affectedRows = ps.getUpdateCount();
-			if (affectedRows > 0) {
-				System.out.println("Successufully delete product\nAffected rows: " + affectedRows);
-			}
-		} catch (SQLException e) {
-			throw new RuntimeException(e.getMessage());
-		}
-	}
-
-	public List<Product> getProductsByCategoryName(String name) {
-		try (PreparedStatement ps = conn.prepareStatement(Query.SQL_PRODUCTS_BY_CATEGORY_NAME)) {
-			ps.setString(1, name);
-			try (ResultSet rs = ps.executeQuery()) {
-				List<Product> products = new ArrayList<>();
-				Product prod = null;
-				while (rs.next()) {
-					prod = instantiateProduct(rs);
-					products.add(prod);
-				}
-				return products;
-			} catch (Exception e) {
-				throw new RuntimeException(e.getMessage());
-			}
-		} catch (SQLException e) {
-			throw new RuntimeException(e.getMessage());
-		}
-	}
-
-	private Product instantiateProduct(ResultSet rs) throws SQLException {
-		Product prod = new Product();
-		prod.setId(rs.getInt(1));
-		prod.setName(rs.getString(2));
-		prod.setDescription(rs.getString(3));
-		prod.setPrice(rs.getBigDecimal(4));
-		prod.setRegisterDate(rs.getTimestamp(5));
-		return prod;
-	}
+    public Address findById(int id) {
+        try (PreparedStatement ps = conn.prepareStatement(Query.SQL_ADDRESS_SELECT)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                Address address = null;
+                while (rs.next()) {
+                    address = new Address();
+                    address.setCep(rs.getString("cep"));
+                    address.setNumber(rs.getString("number"));
+                    address.setPlace(rs.getString("place"));
+                    address.setLocal(rs.getString("local"));
+                    address.setUserId(rs.getInt("user_id"));
+                }
+                return address;
+            } catch (Exception e) {
+                throw new RuntimeException(e.getMessage());
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
 
 }

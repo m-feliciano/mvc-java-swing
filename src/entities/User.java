@@ -1,10 +1,5 @@
 package entities;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,46 +7,33 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Category {
+public class User {
 
-	private Integer id;
-	private String name;
+    private Integer id;
+    private String username;
+    private String email;
+    private String password;
 
-	@Setter(value = AccessLevel.NONE)
-	List<Product> products = new ArrayList<>();
+    public User(String username, String email, String password) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    }
 
-	public Category(String name) {
-		this.name = name;
-	}
+    public User(String username, String email, Integer id) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+    }
 
-	public Category(int id, String name) {
-		super();
-		this.id = id;
-		this.name = name;
-	}
-
-	public void addProduct(Product prod) {
-		products.add(prod);
-	}
-
-	@Override
-	public String toString() {
-		return name;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if ((obj == null) || (getClass() != obj.getClass()))
-			return false;
-		Category other = (Category) obj;
-		return Objects.equals(id, other.id);
-	}
+    @Override
+    public String toString() {
+        return "UserDAO{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
 
 }

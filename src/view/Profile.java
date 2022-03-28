@@ -1,33 +1,70 @@
 package view;
 
+import controller.AddressController;
+import controller.UserController;
+import entities.Address;
+import entities.User;
+import view.utils.BuilderLayout;
+import view.utils.Message;
+
 import javax.swing.*;
 import java.awt.*;
 
-public class Login extends JFrame {
+public class Profile extends JFrame {
 
     private static final long serialVersionUID = -3290552204306899863L;
+    private final transient UserController userController;
+    private final transient AddressController addressController;
 
-    JButton saveBtn;
+    private JButton updateBtn;
     private JTextField userIdTxt;
     private JTextField usernameTxt;
     private JTextField emailTxt;
-    private JTextField passwordTxt;
+    private JTextField stateTxt;
     private JTextField cepTxt;
-    private JTextField streetTxt;
+    private JTextField placeTxt;
     private JTextField numberTxt;
 
-    public Login() {
-        super("CRUD LOGIN");
+    public Profile() {
+        super("PROFILE CRUD");
+        addressController = new AddressController();
+        userController = new UserController();
         Container container = getContentPane();
         setLayout(null);
         buildFrame(container);
-        saveBtn.addActionListener(e -> {
+
+        updateBtn.addActionListener(e -> {
+            updateAddress();
+            updateUser();
+            updateTable();
+            Message.showMessage("successfully updated");
         });
+        populateTable();
+    }
+
+    private void updateTable() {
+        populateTable();
+    }
+
+    private void updateAddress() {
+        String cep = cepTxt.getText();
+        String number = numberTxt.getText();
+        Integer userId = Integer.parseInt(userIdTxt.getText());
+        Address address = new Address(cep, number, userId);
+        this.addressController.update(address);
+    }
+
+    private void updateUser() {
+        String username = usernameTxt.getText();
+        String email = emailTxt.getText();
+        Integer userId = Integer.parseInt(userIdTxt.getText());
+        User user = new User(username, email, userId);
+        this.userController.update(user);
     }
 
     private void buildFrame(Container container) {
         final int CONTAINER_HORIZONTAL_SIZE = 320;
-        final int CONTAINER_VERTICAL_SIZE = 450;
+        final int CONTAINER_VERTICAL_SIZE = 510;
         final int PADDING_LEFT = 40;
         buildButtons(container, PADDING_LEFT);
         buildInputs(container, PADDING_LEFT);
@@ -38,9 +75,9 @@ public class Login extends JFrame {
     }
 
     private void buildButtons(Container container, int PADDING_LEFT) {
-        saveBtn = new JButton("Update");
-        int[] logoutBtnBounds = {PADDING_LEFT, 360, 80, 25};
-        addButton(container, saveBtn, logoutBtnBounds, new Color(255, 197, 7), Color.WHITE);
+        updateBtn = new JButton("Update");
+        int[] logoutBtnBounds = {PADDING_LEFT, 420, 80, 25};
+        addButton(container, updateBtn, logoutBtnBounds, new Color(255, 197, 7), Color.WHITE);
     }
 
     private void addButton(Container container, JButton button, int[] bounds, Color background, Color foreground) {
@@ -51,10 +88,11 @@ public class Login extends JFrame {
     }
 
     private void buildInputs(Container container, int PADDING_LEFT) {
+        userIdTxt = new JTextField();
         // USERNAME
         JLabel usernameLabel = new JLabel("USERNAME");
         int[] usernameBounds = {PADDING_LEFT, 20, 220, 25};
-        addLabel(container, usernameLabel, usernameBounds, null, Color.BLACK);
+        BuilderLayout.addLabel(container, usernameLabel, usernameBounds);
 
         usernameTxt = new JTextField();
         usernameTxt.setBounds(PADDING_LEFT, 45, 220, 25);
@@ -63,7 +101,7 @@ public class Login extends JFrame {
         // EMAIL
         JLabel emailLabel = new JLabel("EMAIL");
         int[] priceBounds = {PADDING_LEFT, 80, 240, 25};
-        addLabel(container, emailLabel, priceBounds, null, Color.BLACK);
+        BuilderLayout.addLabel(container, emailLabel, priceBounds);
 
         emailTxt = new JTextField();
         emailTxt.setBounds(PADDING_LEFT, 105, 220, 25);
@@ -73,12 +111,12 @@ public class Login extends JFrame {
         JLabel infoLabel = new JLabel("ADDRESS");
         infoLabel.setFont(new Font("SansSerif", Font.PLAIN, 16));
         int[] infoBounds = {PADDING_LEFT + 70, 140, 100, 30};
-        addLabel(container, infoLabel, infoBounds, null, new Color(179, 179,179));
+        BuilderLayout.addLabel(container, infoLabel, infoBounds, null, new Color(179, 179, 179));
 
         // ADDRESS
         JLabel cepLabel = new JLabel("CEP");
         int[] cepBounds = {PADDING_LEFT, 170, 220, 25};
-        addLabel(container, cepLabel, cepBounds, null, Color.BLACK);
+        BuilderLayout.addLabel(container, cepLabel, cepBounds);
 
         cepTxt = new JTextField();
         cepTxt.setBounds(PADDING_LEFT, 195, 220, 25);
@@ -87,7 +125,7 @@ public class Login extends JFrame {
         // NUMBER
         JLabel numberLabel = new JLabel("NUMBER");
         int[] numberBounds = {PADDING_LEFT, 230, 220, 25};
-        addLabel(container, numberLabel, numberBounds, null, Color.BLACK);
+        BuilderLayout.addLabel(container, numberLabel, numberBounds);
 
         numberTxt = new JTextField();
         numberTxt.setBounds(PADDING_LEFT, 255, 220, 25);
@@ -96,19 +134,34 @@ public class Login extends JFrame {
         // STREET
         JLabel streetLabel = new JLabel("STREET");
         int[] streetBounds = {PADDING_LEFT, 290, 220, 25};
-        addLabel(container, streetLabel, streetBounds, null, Color.BLACK);
+        BuilderLayout.addLabel(container, streetLabel, streetBounds);
 
-        streetTxt = new JTextField();
-        streetTxt.setEditable(false);
-        streetTxt.setBounds(PADDING_LEFT, 315, 220, 25);
-        container.add(streetTxt);
+        placeTxt = new JTextField();
+        placeTxt.setEditable(false);
+        placeTxt.setBounds(PADDING_LEFT, 315, 220, 25);
+        container.add(placeTxt);
+
+        // LOCAL STATE
+        JLabel stateLabel = new JLabel("LOCAL");
+        int[] stateBounds = {PADDING_LEFT, 350, 220, 25};
+        BuilderLayout.addLabel(container, stateLabel, stateBounds);
+
+        stateTxt = new JTextField();
+        stateTxt.setEditable(false);
+        stateTxt.setBounds(PADDING_LEFT, 375, 220, 25);
+        container.add(stateTxt);
     }
 
-    private void addLabel(Container container, JLabel label, int[] bounds, Color background, Color foreground) {
-        label.setBounds(bounds[0], bounds[1], bounds[2], bounds[3]);
-        label.setBackground(background != null ? background : Color.WHITE);
-        label.setForeground(foreground != null ? foreground : Color.BLACK);
-        container.add(label);
+    private void populateTable() {
+        User user = userController.findById(1);
+        Address address = addressController.findById(1);
+        userIdTxt.setText(user.getId().toString());
+        usernameTxt.setText(user.getUsername());
+        emailTxt.setText(user.getEmail());
+        cepTxt.setText(address.getCep());
+        numberTxt.setText(address.getNumber());
+        placeTxt.setText(address.getPlace());
+        stateTxt.setText(address.getLocal());
     }
 
 }

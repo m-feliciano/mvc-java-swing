@@ -1,43 +1,26 @@
 package controller;
 
-import java.sql.Connection;
-import java.util.List;
-
-import dao.ProductDAO;
-import entities.Product;
+import dao.UserDAO;
+import entities.User;
 import infra.ConnectionFactory;
 
-public class ProductController {
+import java.sql.Connection;
 
-	private ProductDAO productDAO;
+public class UserController {
 
-	public ProductController() {
-		Connection conn = new ConnectionFactory().getConnection();
-		this.productDAO = new ProductDAO(conn);
-	}
+    private UserDAO userDAO;
 
-	public void save(Product product) {
-		this.productDAO.insert(product);
-	}
+    public UserController() {
+        Connection conn = new ConnectionFactory().getConnection();
+        this.userDAO = new UserDAO(conn);
+    }
 
-	public void delete(int id) {
-		this.productDAO.delete(id);
-	}
+    public User findById(int id) {
+        return this.userDAO.findById(id);
+    }
 
-	public List<Product> list() {
-		return this.productDAO.getProducts();
-	}
-
-	public List<Product> getProductsByCategoryName(String name) {
-		return this.productDAO.getProductsByCategoryName(name);
-	}
-
-	public Product findById(int id) {
-		return this.productDAO.findById(id);
-	}
-
-	public void update(Product prod) {
-		this.productDAO.update(prod);
-	}
+    public void update(User user) {
+        this.userDAO.update(user);
+    }
 
 }

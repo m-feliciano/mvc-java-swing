@@ -1,18 +1,14 @@
 package test;
 
-import infra.ConnectionFactory;
+import entities.Address;
 import infra.exceptions.DbException;
 
-public class TestPool {
+public class AddressServiceTest {
 
-	public static void main(String[] args) throws DbException {
+    public static void main(String[] args) throws DbException {
 
-		ConnectionFactory factory = new ConnectionFactory();
-
-		for (int i = 0; i < 15; i++) {
-			factory.getConnection();
-			System.out.println("Connection number: " + i);
-		}
-	}
+        Address address = new Address("04707000", "250", 1);
+        System.out.println(address);
+    }
 
 }

@@ -1,9 +1,6 @@
 package infra;
 
-public class Query {
-
-    private Query() {
-    }
+public abstract class Query {
 
     public static final String SQL_PRODUCTS_SELECT = "SELECT id, name, description, price, created_at FROM tb_product ORDER BY id";
     public static final String SQL_PRODUCT_SELECT_BY_ID = "SELECT id, name, description, price, created_at FROM tb_product WHERE id = ?";
@@ -20,4 +17,15 @@ public class Query {
             FROM tb_category c INNER JOIN tb_product p ON c.id = p.category_id;
             """;
 
+    public static final String SQL_ADDRESS_SELECT = "SELECT cep, number, place, local, user_id FROM tb_address WHERE user_id = ?";
+    public static final String SQL_ADDRESS_UPDATE = "UPDATE tb_address SET cep= ?, number=?, place=?, local=? WHERE user_id = ?";
+
+    public static final String SQL_USER_UPDATE = "UPDATE tb_user SET username=?, email=? WHERE id = ?";
+    public static final String SQL_USER_SELECT = "SELECT id, username, email FROM tb_user WHERE id = ?";
+
+    public static final String SQL_INVENTORY_SELECT = "SELECT id, description, quantity, product_id, category_id FROM tb_inventory ORDER BY id";
+    public static final String SQL_INVENTORY_SELECT_BY_ID = "SELECT id, description, quantity, product_id, category_id FROM tb_inventory WHERE id = ?";
+    public static final String SQL_INVENTORY_INSERT = "INSERT INTO tb_inventory (description, quantity, product_id, category_id) VALUES (?,?,?,?)";
+    public static final String SQL_INVENTORY_DELETE = "DELETE FROM tb_inventory WHERE id = ?";
+    public static final String SQL_INVENTORY_UPDATE = "UPDATE tb_inventory SET description=?, quantity=?, product_id=?, category_id=? WHERE id = ?";
 }

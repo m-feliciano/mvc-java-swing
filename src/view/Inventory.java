@@ -4,28 +4,31 @@ import controller.CategoryController;
 import controller.ProductController;
 import entities.Category;
 import entities.Product;
+import view.utils.BuilderLayout;
+import view.utils.Message;
+import view.utils.Validation;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.io.Serial;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
 
-public class Home extends JFrame {
+public class Inventory extends JFrame {
 
+    @Serial
     private static final long serialVersionUID = -3290552204306899863L;
-
-    private JTextField nameTxt;
+    private static final Color LIGHT_BUTTON = new Color(248, 249, 250);
+    private final transient ProductController productController;
+    private final transient CategoryController categoryController;
     private JTextField descriptionTxt;
-    private JTextField priceTxt;
     private JComboBox<Category> categoryCombo;
+    private JComboBox<Product> productCombo;
     private JButton saveBtn;
     private JButton editBtn;
     private JButton cleanBtn;
@@ -33,20 +36,14 @@ public class Home extends JFrame {
     private JButton pageBeforeBtn;
     private JButton pageNextBtn;
     private JButton categoryManagerBtn;
+    private JButton prodManagerBtn;
     private JButton editUserBtn;
-
     private JTable table;
     private JLabel priceTotalLabel;
     private DefaultTableModel model;
-    private final transient ProductController productController;
-    private final transient CategoryController categoryController;
 
-    private static final String NUMBER_FORMAT_ERROR = "Number Format";
-    private static final String UNSELECTED_ROW_ERROR = "Unselected row";
-    private static final Color LIGHT_BUTTON = new Color(248, 249, 250);
-
-    public Home() {
-        super("CRUD MVC");
+    public Inventory() {
+        super("INVENTORY CRUD");
         categoryController = new CategoryController();
         productController = new ProductController();
         Container container = getContentPane();
@@ -73,131 +70,125 @@ public class Home extends JFrame {
         cleanBtn.addActionListener(e -> cleanInputs());
         pageBeforeBtn.addActionListener(e -> System.out.println("pageBeforeBtn"));
         pageNextBtn.addActionListener(e -> System.out.println("pageNextBtn"));
-        categoryManagerBtn.addActionListener(e -> System.out.println("categoryManagerBtn"));
+        categoryManagerBtn.addActionListener(e -> {
+            CategoryFrame categoryFrame = new CategoryFrame();
+            categoryFrame.setAlwaysOnTop(true);
+            categoryFrame.setVisible(true);
+        });
+
+        prodManagerBtn.addActionListener(e -> {
+            ProductFrame productFrame = new ProductFrame();
+            productFrame.setVisible(true);
+        });
 
         editUserBtn.addActionListener(e -> {
             Profile login = new Profile();
-            login.setAlwaysOnTop(true);
-            login.show();
+            login.setVisible(true);
         });
-
-        // price input validation
-        priceTxt.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyReleased(KeyEvent EVT) {
-                boolean valid = ((EVT.getKeyChar() >= '0' && EVT.getKeyChar() <= '9') || EVT.getKeyChar() == '.' || EVT.getKeyChar() == '\b');
-                if (!valid) {
-                    showError("Please enter numeric value only", NUMBER_FORMAT_ERROR);
-                    priceTxt.setText("");
-                }
-            }
-        });
-
 //        populateTable();
     }
 
     private void buildFrame(Container container) {
         final int CONTAINER_HORIZONTAL_SIZE = 800;
         final int CONTAINER_VERTICAL_SIZE = 590;
-        final int PADDING_LEFT = 45;
 
-        buildComboCategory(container, PADDING_LEFT);
-        buildInputs(container, CONTAINER_HORIZONTAL_SIZE, PADDING_LEFT);
-        buildButtons(container, CONTAINER_HORIZONTAL_SIZE, PADDING_LEFT);
-        buildTable(container, PADDING_LEFT);
+        buildProductCategory(container);
+        buildComboCategory(container);
+        buildInputs(container);
+        buildButtons(container);
+        buildTable(container);
 
         setSize(CONTAINER_HORIZONTAL_SIZE, CONTAINER_VERTICAL_SIZE);
         setVisible(true);
         setResizable(false);
         setLocationRelativeTo(null);
     }
+    private void buildProductCategory(Container container) {
+        productCombo = new JComboBox<>();
+        productCombo.setBounds(45, 60, 210, 25);
+        container.add(productCombo);
 
-    private void buildComboCategory(Container container, int paddingLeft) {
+        List<Product> products = productController.list();
+        products.forEach(c -> productCombo.addItem(c));
+    }
+
+    private void buildComboCategory(Container container) {
         categoryCombo = new JComboBox<>();
-        categoryCombo.setBounds(paddingLeft, 180, 170, 25);
+        categoryCombo.setBounds(45, 120, 210, 25);
         container.add(categoryCombo);
 
         List<Category> categories = categoryController.list();
         categories.forEach(c -> categoryCombo.addItem(c));
     }
 
-    private void buildInputs(Container container, int eixoX, int paddingLeft) {
-        // NAME
-        JLabel nameLabel = new JLabel("PRODUCT NAME");
-        int[] nameLabelBounds = {paddingLeft, 10, 240, 20};
-        addLabel(container, nameLabel, nameLabelBounds, null, Color.BLACK);
-
-        nameTxt = new JTextField();
-        nameTxt.setBounds(paddingLeft, 30, 280, 25);
-        container.add(nameTxt);
-
+    private void buildInputs(Container container) {
         // DESCRIPTION
-        JLabel descriptionLabel = new JLabel("PRODUCT DESCRIPTION");
-        int[] descriptionBounds = {paddingLeft, 60, 240, 20};
-        addLabel(container, descriptionLabel, descriptionBounds, null, Color.BLACK);
+        JLabel descriptionLabel = new JLabel("DESCRIPTION");
+        int[] descriptionBounds = {45, 160, 240, 20};
+        BuilderLayout.addLabel(container, descriptionLabel, descriptionBounds, null, Color.BLACK);
 
         descriptionTxt = new JTextField();
-        descriptionTxt.setBounds(paddingLeft, 80, 280, 25);
+        descriptionTxt.setBounds(45, 185, 320, 25);
         container.add(descriptionTxt);
 
-        // PRICE
-        JLabel priceLabel = new JLabel("PRODUCT PRICE");
-        int[] priceBounds = {paddingLeft, 110, 240, 20};
-        addLabel(container, priceLabel, priceBounds, null, Color.BLACK);
-
-        priceTxt = new JTextField();
-        priceTxt.setHorizontalAlignment(SwingConstants.LEFT);
-        priceTxt.setBounds(paddingLeft, 130, 280, 25);
-        container.add(priceTxt);
+        // PRODUCT
+        JLabel productLabel = new JLabel("PRODUCT");
+        int[] productBounds = {45, 35, 240, 25};
+        BuilderLayout.addLabel(container, productLabel, productBounds, null, Color.BLACK);
 
         // CATEGORY
         JLabel categoryLabel = new JLabel("CATEGORY");
-        int[] categoryBounds = {paddingLeft, 155, 240, 25};
-        addLabel(container, categoryLabel, categoryBounds, null, Color.BLACK);
+        int[] categoryBounds = {45, 95, 240, 25};
+        BuilderLayout.addLabel(container, categoryLabel, categoryBounds, null, Color.BLACK);
 
         // TOTAL DOC
         priceTotalLabel = new JLabel();
         priceTotalLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
-        int[] priceTotalBounds = {eixoX - 275, 500, 200, 25};
-        addLabel(container, priceTotalLabel, priceTotalBounds, null, Color.BLACK);
+        int[] priceTotalBounds = {800 - 275, 500, 200, 25};
+        BuilderLayout.addLabel(container, priceTotalLabel, priceTotalBounds, null, Color.BLACK);
     }
 
-    private void buildButtons(Container container, int eixoX, int paddingLeft) {
+    private void buildButtons(Container container) {
         editUserBtn = new JButton("Profile");
-        int[] editUserBtnBounds = {eixoX - 225, 10, 80, 25};
-        addButton(container, editUserBtn, editUserBtnBounds, Color.BLUE, Color.WHITE);
+        int[] editUserBtnBounds = {800 - 200, 30, 80, 25};
+        BuilderLayout.addButton(container, editUserBtn, editUserBtnBounds, Color.BLUE, Color.WHITE);
 
-        categoryManagerBtn = new JButton("Manager");
-        int[] catManagerBounds = {paddingLeft + 180, 180, 100, 25};
-        addButton(container, categoryManagerBtn, catManagerBounds, Color.BLUE, Color.WHITE);
+        prodManagerBtn = new JButton("Add");
+        int[] prodManagerBounds = {45 + 220, 60, 100, 25};
+        BuilderLayout.addButton(container, prodManagerBtn, prodManagerBounds);
+
+        categoryManagerBtn = new JButton("Add");
+        int[] catManagerBounds = {45 + 220, 120, 100, 25};
+        BuilderLayout.addButton(container, categoryManagerBtn, catManagerBounds);
 
         saveBtn = new JButton("Save");
-        int[] savaBounds = {paddingLeft, 230, 80, 25};
-        addButton(container, saveBtn, savaBounds, new Color(40, 167, 69), Color.WHITE);
+        int[] savaBounds = {45, 230, 80, 25};
+        BuilderLayout.addButton(container, saveBtn, savaBounds, new Color(40, 167, 69), Color.WHITE);
 
         cleanBtn = new JButton("Clean");
-        int[] cleanBounds = {paddingLeft + 90, 230, 80, 25};
-        addButton(container, cleanBtn, cleanBounds, new Color(108, 117, 125), Color.WHITE);
+        int[] cleanBounds = {45 + 90, 230, 80, 25};
+        BuilderLayout.addButton(container, cleanBtn, cleanBounds, new Color(108, 117, 125), Color.WHITE);
 
         deleteBtn = new JButton("Delete");
-        int[] deleteBtnBounds = {paddingLeft, 500, 80, 25};
-        addButton(container, deleteBtn, deleteBtnBounds, new Color(220, 53, 69), Color.WHITE);
+        int[] deleteBtnBounds = {45, 500, 80, 25};
+        BuilderLayout.addButton(container, deleteBtn, deleteBtnBounds, new Color(220, 53, 69), Color.WHITE);
 
         editBtn = new JButton("Update");
-        int[] editBtnBounds = {paddingLeft + 90, 500, 80, 25};
-        addButton(container, editBtn, editBtnBounds, new Color(255, 197, 7), Color.WHITE);
+        int[] editBtnBounds = {45 + 90, 500, 80, 25};
+        BuilderLayout.addButton(container, editBtn, editBtnBounds, new Color(255, 197, 7), Color.WHITE);
 
         pageBeforeBtn = new JButton("<");
         int[] pageBeforeBtnBounds = {340, 500, 50, 25};
-        addButton(container, pageBeforeBtn, pageBeforeBtnBounds, LIGHT_BUTTON, null);
+        BuilderLayout.addButton(container, pageBeforeBtn, pageBeforeBtnBounds, LIGHT_BUTTON, null);
 
         pageNextBtn = new JButton(">");
         int[] pageNextBtnBounds = {400, 500, 50, 25};
-        addButton(container, pageNextBtn, pageNextBtnBounds, LIGHT_BUTTON, null);
+        BuilderLayout.addButton(container, pageNextBtn, pageNextBtnBounds, LIGHT_BUTTON, null);
     }
 
-    private void buildTable(Container container, int paddingLeft) {
-        model = new DefaultTableModel() {
+    private void buildTable(Container container) {
+        this.model = new DefaultTableModel() {
+            @Serial
             private static final long serialVersionUID = 1L;
 
             @Override
@@ -206,12 +197,12 @@ public class Home extends JFrame {
             }
         };
 
-        table = new JTable(model);
-        model.addColumn("Product Id");
-        model.addColumn("Product Name");
-        model.addColumn("Product Description");
-        model.addColumn("Product Price");
-        model.addColumn("Created At");
+        this.table = new JTable(model);
+        this.model.addColumn("Product Id");
+        this.model.addColumn("Product Name");
+        this.model.addColumn("Product Description");
+        this.model.addColumn("Product Price");
+        this.model.addColumn("Created At");
         // Defines table's column width.
         int[] columnsWidth = {30, 200, 260, 90, 120};
         // Configures table's column width.
@@ -231,89 +222,38 @@ public class Home extends JFrame {
         table.getColumnModel().getColumn(0).setCellRenderer(cellRendererCenter);
         table.getColumnModel().getColumn(3).setCellRenderer(cellRendererRight);
         table.getColumnModel().getColumn(4).setCellRenderer(cellRendererCenter);
-        table.setBounds(paddingLeft, 280, 700, 200);
+        table.setBounds(45, 280, 700, 200);
         container.add(table);
-    }
-
-    private void addButton(Container container, JButton button, int[] bounds, Color background, Color foreground) {
-        button.setBounds(bounds[0], bounds[1], bounds[2], bounds[3]);
-        button.setBackground(background != null ? background : Color.WHITE);
-        button.setForeground(foreground != null ? foreground : Color.BLACK);
-        container.add(button);
-    }
-
-    private void addLabel(Container container, JLabel label, int[] bounds, Color background, Color foreground) {
-        label.setBounds(bounds[0], bounds[1], bounds[2], bounds[3]);
-        label.setBackground(background != null ? background : Color.WHITE);
-        label.setForeground(foreground != null ? foreground : Color.BLACK);
-        container.add(label);
     }
 
     private void update() {
         Object obj = getInputObject();
-        if (isInstanceOf(obj)) {
-            Integer id = (Integer) obj;
-            String name = (String) model.getValueAt(table.getSelectedRow(), 1);
-            String description = (String) model.getValueAt(table.getSelectedRow(), 2);
-            BigDecimal price = convertToPrice((String) model.getValueAt(table.getSelectedRow(), 3));
-            Product prod = new Product(id, name, description, price);
-            System.out.println(prod);
-            this.productController.update(prod);
-        }
     }
 
     private Object getInputObject() {
         try {
             return model.getValueAt(table.getSelectedRow(), 0);
         } catch (Exception e) {
-            showError("Please select a row", UNSELECTED_ROW_ERROR);
+            Message.showError("Please select a row");
         }
         return null;
     }
 
     private void delete() {
         Object obj = getInputObject();
-        if (isInstanceOf(obj)) {
-            Integer id = (Integer) obj;
-            this.productController.delete(id);
-            model.removeRow(table.getSelectedRow());
-            JOptionPane.showMessageDialog(this, "successfully deleted", "ok", JOptionPane.INFORMATION_MESSAGE);
-        }
     }
 
     private boolean save() {
-        boolean invalidTxt = nameTxt.getText().isEmpty() || descriptionTxt.getText().isEmpty();
-        BigDecimal price = convertToPrice(priceTxt.getText());
-        if (invalidTxt) {
-            showError("ERROR: must provider a name and description!", "Invalid input");
+        if (Validation.validate(descriptionTxt)) {
+            Message.showError("ERROR: must provider a name and description!");
             return false;
         }
-        if (price == null || price.compareTo(BigDecimal.ONE) < 0) {
-            showError("ERROR: price must be greater than R$1.00. format.: 10.00", NUMBER_FORMAT_ERROR);
-            return false;
-        }
-
-        Product product = new Product(nameTxt.getText(), descriptionTxt.getText(), price);
+//      Product product = new Product(nameTxt.getText(), descriptionTxt.getText(), price);
 //		Category category = (Category) categoryCombo.getSelectedItem();
 //		product.setCategoryId(category.getId());
-        this.productController.save(product);
-        JOptionPane.showMessageDialog(this, "successfully saved", "ok", JOptionPane.INFORMATION_MESSAGE);
+//      this.productController.save(product);
+        Message.showMessage("successfully saved");
         return true;
-    }
-
-    private BigDecimal convertToPrice(String str) {
-        boolean validString = str != null && !str.isBlank() && !str.isEmpty();
-        if (validString) {
-            try {
-                return new BigDecimal(str).setScale(2, RoundingMode.HALF_UP);
-            } catch (Exception e) {
-                showError("ERROR: Must provide a valid number", NUMBER_FORMAT_ERROR);
-                throw new IllegalArgumentException("Invalid price value");
-            } finally {
-                this.priceTxt.setText("");
-            }
-        }
-        return null;
     }
 
     private void populateTable() {
@@ -336,9 +276,7 @@ public class Home extends JFrame {
     }
 
     private void cleanInputs() {
-        this.nameTxt.setText("");
         this.descriptionTxt.setText("");
-        this.priceTxt.setText("");
         this.categoryCombo.setSelectedIndex(0);
     }
 
@@ -349,13 +287,5 @@ public class Home extends JFrame {
 
     private void cleanTable() {
         model.getDataVector().clear();
-    }
-
-    private void showError(String message, String title) {
-        JOptionPane.showMessageDialog(null, message, title, JOptionPane.ERROR_MESSAGE);
-    }
-
-    private boolean isInstanceOf(Object obj) {
-        return obj instanceof Integer;
     }
 }
