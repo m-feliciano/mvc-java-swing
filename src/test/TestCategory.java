@@ -1,10 +1,10 @@
-package application;
-
-import java.util.List;
+package test;
 
 import controller.CategoryController;
 import entities.Category;
 import entities.Product;
+
+import java.util.List;
 
 public class TestCategory {
 

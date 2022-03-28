@@ -42,16 +42,16 @@ public class Home extends JFrame {
     private final transient ProductController productController;
     private final transient CategoryController categoryController;
 
+    private static final String NUMBER_FORMAT_ERROR = "Number Format";
+    private static final String UNSELECTED_ROW_ERROR = "Unselected row";
     private static final Color LIGHT_BUTTON = new Color(248, 249, 250);
 
     public Home() {
         super("CRUD MVC");
-        Container container = getContentPane();
-        setLayout(null);
-
         categoryController = new CategoryController();
         productController = new ProductController();
-
+        Container container = getContentPane();
+        setLayout(null);
         buildFrame(container);
 
         saveBtn.addActionListener(e -> {
@@ -76,21 +76,27 @@ public class Home extends JFrame {
         pageNextBtn.addActionListener(e -> System.out.println("pageNextBtn"));
         categoryManagerBtn.addActionListener(e -> System.out.println("categoryManagerBtn"));
         logoutBtn.addActionListener(e -> System.out.println("logoutBtn"));
-        editUserBtn.addActionListener(e -> System.out.println("editUserBtn"));
+
+
+        editUserBtn.addActionListener(e -> {
+            Login login = new Login();
+            login.setAlwaysOnTop(true);
+            login.show();
+        });
 
         // price input validation
         priceTxt.addKeyListener(new KeyAdapter() {
+            @Override
             public void keyReleased(KeyEvent EVT) {
-                String value = priceTxt.getText();
-                int l = value.length();
-                if (!((EVT.getKeyChar() >= '0' && EVT.getKeyChar() <= '9') || EVT.getKeyChar() == '.' || EVT.getKeyChar() == '\b')) {
-                    JOptionPane.showMessageDialog(null, "Please enter numeric value only", "Number Format", JOptionPane.ERROR_MESSAGE);
+                boolean valid = ((EVT.getKeyChar() >= '0' && EVT.getKeyChar() <= '9') || EVT.getKeyChar() == '.' || EVT.getKeyChar() == '\b');
+                if (!valid) {
+                    showError("Please enter numeric value only", NUMBER_FORMAT_ERROR);
                     priceTxt.setText("");
                 }
             }
         });
 
-        populateTable();
+//        populateTable();
     }
 
     private void buildFrame(Container container) {
@@ -267,7 +273,7 @@ public class Home extends JFrame {
         try {
             return model.getValueAt(table.getSelectedRow(), 0);
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Please select a row", "error", JOptionPane.ERROR_MESSAGE);
+            showError("Please select a row", UNSELECTED_ROW_ERROR);
         }
         return null;
     }
@@ -286,11 +292,11 @@ public class Home extends JFrame {
         boolean invalidTxt = nameTxt.getText().isEmpty() || descriptionTxt.getText().isEmpty();
         BigDecimal price = convertToPrice(priceTxt.getText());
         if (invalidTxt) {
-            JOptionPane.showMessageDialog(this, "ERROR: must provider a name and description!", "Invalid input", JOptionPane.ERROR_MESSAGE);
+            showError("ERROR: must provider a name and description!", "Invalid input");
             return false;
         }
         if (price == null || price.compareTo(BigDecimal.ONE) < 0) {
-            JOptionPane.showMessageDialog(this, "ERROR: price must be greater than R$1.00. format.: 10.00", "Number Format", JOptionPane.ERROR_MESSAGE);
+            showError("ERROR: price must be greater than R$1.00. format.: 10.00", NUMBER_FORMAT_ERROR);
             return false;
         }
 
@@ -308,7 +314,7 @@ public class Home extends JFrame {
             try {
                 return new BigDecimal(str).setScale(2, RoundingMode.HALF_UP);
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "ERROR: Must provide a valid number", "Number Format", JOptionPane.ERROR_MESSAGE);
+                showError("ERROR: Must provide a valid number", NUMBER_FORMAT_ERROR);
                 throw new IllegalArgumentException("Invalid price value");
             } finally {
                 this.priceTxt.setText("");
@@ -318,9 +324,8 @@ public class Home extends JFrame {
     }
 
     private void populateTable() {
-        List<Product> products = productController.list();
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-
+        List<Product> products = productController.list();
         products.forEach(p ->
                 model.addRow(new Object[]{
                         p.getId(),
@@ -351,6 +356,10 @@ public class Home extends JFrame {
 
     private void cleanTable() {
         model.getDataVector().clear();
+    }
+
+    private void showError(String message, String title) {
+        JOptionPane.showMessageDialog(null, message, title, JOptionPane.ERROR_MESSAGE);
     }
 
     private boolean isInstanceOf(Object obj) {

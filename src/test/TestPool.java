@@ -1,4 +1,4 @@
-package application;
+package test;
 
 import infra.ConnectionFactory;
 import infra.exceptions.DbException;

@@ -1,10 +1,10 @@
-package application;
-
-import java.util.List;
+package test;
 
 import controller.ProductController;
 import entities.Product;
 import infra.exceptions.DbException;
+
+import java.util.List;
 
 public class TestProduct {
 
