@@ -1,10 +1,19 @@
 package entities;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Product {
 
 	private Integer id;
@@ -12,10 +21,6 @@ public class Product {
 	private String description;
 	private Date registerDate;
 	private BigDecimal price;
-
-	public Product() {
-		super();
-	}
 
 	public Product(String name, String description, BigDecimal price) {
 		super();
@@ -32,46 +37,6 @@ public class Product {
 		this.price = price;
 	}
 
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public Date getRegisterDate() {
-		return registerDate;
-	}
-
-	public void setRegisterDate(Date registerDate) {
-		this.registerDate = registerDate;
-	}
-
-	public BigDecimal getPrice() {
-		return price;
-	}
-
-	public void setPrice(BigDecimal price) {
-		this.price = price;
-	}
-
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -84,8 +49,10 @@ public class Product {
 		sb.append(description);
 		sb.append(", PRICE= ");
 		sb.append(price);
-		sb.append(", REGISTER DATE= ");
-		sb.append(sdf.format(registerDate));
+		if (registerDate != null){
+			sb.append(", REGISTER DATE= ");
+			sb.append(sdf.format(registerDate));
+		}
 		return sb.toString();
 	}
 
@@ -103,4 +70,5 @@ public class Product {
 		Product other = (Product) obj;
 		return Objects.equals(id, other.id);
 	}
+
 }

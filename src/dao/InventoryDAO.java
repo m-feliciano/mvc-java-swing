@@ -8,33 +8,33 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import entities.Inventory;
 import entities.Product;
-import entities.ProductCategory;
 import infra.Query;
 
-public class ProductCategoryDAO {
+public class InventoryDAO {
 
 	private Connection conn;
 
-	public ProductCategoryDAO(Connection conn) {
+	public InventoryDAO(Connection conn) {
 		this.conn = conn;
 	}
 
-	public ProductCategory findById(int id) {
+	public Inventory findById(int id) {
 		try (PreparedStatement ps = conn.prepareStatement(Query.SQL_PRODUCT_SELECT_BY_ID)) {
 
 			ps.setInt(1, id);
 
 			try (ResultSet rs = ps.executeQuery()) {
 
-				ProductCategory productCategory = null;
+				Inventory inventory = null;
 				while (rs.next()) {
-					productCategory = new ProductCategory();
-					productCategory.setId(rs.getInt(1));
-					productCategory.setProductId(rs.getInt(2));
-					productCategory.setCategoryId(rs.getInt(3));
+					inventory = new Inventory();
+					inventory.setId(rs.getInt(1));
+					inventory.setProductId(rs.getInt(2));
+					inventory.setCategoryId(rs.getInt(3));
 				}
-				return productCategory;
+				return inventory;
 			} catch (Exception e) {
 				throw new RuntimeException(e.getMessage());
 			}
@@ -43,21 +43,21 @@ public class ProductCategoryDAO {
 		}
 	}
 
-	public List<ProductCategory> get() {
+	public List<Inventory> get() {
 		try (PreparedStatement ps = conn.prepareStatement(Query.SQL_PRODUCTS_SELECT)) {
 			try (ResultSet rs = ps.executeQuery()) {
 
-				List<ProductCategory> productCategories = new ArrayList<>();
+				List<Inventory> inventories = new ArrayList<>();
 
-				ProductCategory productCategory = null;
+				Inventory inventory = null;
 				while (rs.next()) {
-					productCategory = new ProductCategory();
-					productCategory.setId(rs.getInt(1));
-					productCategory.setProductId(rs.getInt(2));
-					productCategory.setCategoryId(rs.getInt(3));
-					productCategories.add(productCategory);
+					inventory = new Inventory();
+					inventory.setId(rs.getInt(1));
+					inventory.setProductId(rs.getInt(2));
+					inventory.setCategoryId(rs.getInt(3));
+					inventories.add(inventory);
 				}
-				return productCategories;
+				return inventories;
 			} catch (Exception e) {
 				throw new RuntimeException(e.getMessage());
 			}
@@ -66,11 +66,11 @@ public class ProductCategoryDAO {
 		}
 	}
 
-	public void save(ProductCategory productCategory) {
+	public void save(Inventory inventory) {
 		try (PreparedStatement ps = conn.prepareStatement(Query.SQL_PRODUCT_INSERT, Statement.RETURN_GENERATED_KEYS)) {
 
-			ps.setInt(1, productCategory.getProductId());
-			ps.setInt(2, productCategory.getCategoryId());
+			ps.setInt(1, inventory.getProductId());
+			ps.setInt(2, inventory.getCategoryId());
 
 			int affectedRows = ps.executeUpdate();
 			if (affectedRows > 0) {
@@ -87,11 +87,11 @@ public class ProductCategoryDAO {
 		}
 	}
 
-	public void update(ProductCategory productCategory) {
+	public void update(Inventory inventory) {
 		try (PreparedStatement ps = conn.prepareStatement(Query.SQL_PRODUCTS_UPDATE)) {
-			ps.setInt(1, productCategory.getProductId());
-			ps.setInt(2, productCategory.getCategoryId());
-			ps.setInt(3, productCategory.getId());
+			ps.setInt(1, inventory.getProductId());
+			ps.setInt(2, inventory.getCategoryId());
+			ps.setInt(3, inventory.getId());
 
 			int affectedRows = ps.executeUpdate();
 			if (affectedRows > 0) {

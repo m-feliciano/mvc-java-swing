@@ -1,15 +1,11 @@
 package dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
-
 import entities.Product;
 import infra.Query;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProductDAO {
 
@@ -21,19 +17,11 @@ public class ProductDAO {
 
 	public Product findById(int id) {
 		try (PreparedStatement ps = conn.prepareStatement(Query.SQL_PRODUCT_SELECT_BY_ID)) {
-
 			ps.setInt(1, id);
-
 			try (ResultSet rs = ps.executeQuery()) {
-
 				Product prod = null;
 				while (rs.next()) {
-					prod = new Product();
-					prod.setId(rs.getInt(1));
-					prod.setName(rs.getString(2));
-					prod.setDescription(rs.getString(3));
-					prod.setPrice(rs.getBigDecimal(4));
-					prod.setRegisterDate(rs.getTimestamp(5));
+					prod = instantiateProduct(rs);
 				}
 				return prod;
 			} catch (Exception e) {
@@ -47,17 +35,10 @@ public class ProductDAO {
 	public List<Product> getProducts() {
 		try (PreparedStatement ps = conn.prepareStatement(Query.SQL_PRODUCTS_SELECT)) {
 			try (ResultSet rs = ps.executeQuery()) {
-
 				List<Product> products = new ArrayList<>();
 				Product prod = null;
-
 				while (rs.next()) {
-					prod = new Product();
-					prod.setId(rs.getInt(1));
-					prod.setName(rs.getString(2));
-					prod.setDescription(rs.getString(3));
-					prod.setPrice(rs.getBigDecimal(4));
-					prod.setRegisterDate(rs.getTimestamp(5));
+					prod = instantiateProduct(rs);
 					products.add(prod);
 				}
 				return products;
@@ -71,7 +52,6 @@ public class ProductDAO {
 
 	public void insert(Product prod) {
 		try (PreparedStatement ps = conn.prepareStatement(Query.SQL_PRODUCT_INSERT, Statement.RETURN_GENERATED_KEYS)) {
-
 			ps.setString(1, prod.getName());
 			ps.setString(2, prod.getDescription());
 			ps.setBigDecimal(3, prod.getPrice());
@@ -93,10 +73,10 @@ public class ProductDAO {
 
 	public void update(Product prod) {
 		try (PreparedStatement ps = conn.prepareStatement(Query.SQL_PRODUCTS_UPDATE)) {
-
 			ps.setString(1, prod.getName());
 			ps.setString(2, prod.getDescription());
-			ps.setInt(3, prod.getId());
+			ps.setBigDecimal(3, prod.getPrice());
+			ps.setInt(4, prod.getId());
 
 			int affectedRows = ps.executeUpdate();
 			if (affectedRows > 0) {
@@ -109,9 +89,7 @@ public class ProductDAO {
 	}
 
 	public void delete(int id) {
-
 		try (PreparedStatement ps = conn.prepareStatement(Query.SQL_PRODUCT_DELETE)) {
-
 			ps.setInt(1, id);
 			ps.executeUpdate();
 			int affectedRows = ps.getUpdateCount();
@@ -125,21 +103,12 @@ public class ProductDAO {
 
 	public List<Product> getProductsByCategoryName(String name) {
 		try (PreparedStatement ps = conn.prepareStatement(Query.SQL_PRODUCTS_BY_CATEGORY_NAME)) {
-
 			ps.setString(1, name);
-
 			try (ResultSet rs = ps.executeQuery()) {
-
 				List<Product> products = new ArrayList<>();
 				Product prod = null;
-
 				while (rs.next()) {
-					prod = new Product();
-					prod.setId(rs.getInt(1));
-					prod.setName(rs.getString(2));
-					prod.setDescription(rs.getString(3));
-					prod.setPrice(rs.getBigDecimal(4));
-					prod.setRegisterDate(rs.getTimestamp(5));
+					prod = instantiateProduct(rs);
 					products.add(prod);
 				}
 				return products;
@@ -149,6 +118,16 @@ public class ProductDAO {
 		} catch (SQLException e) {
 			throw new RuntimeException(e.getMessage());
 		}
+	}
+
+	private Product instantiateProduct(ResultSet rs) throws SQLException {
+		Product prod = new Product();
+		prod.setId(rs.getInt(1));
+		prod.setName(rs.getString(2));
+		prod.setDescription(rs.getString(3));
+		prod.setPrice(rs.getBigDecimal(4));
+		prod.setRegisterDate(rs.getTimestamp(5));
+		return prod;
 	}
 
 }

@@ -20,14 +20,10 @@ public class CategoryDAO {
 	}
 
 	public List<Category> getCategories() {
-
 		try (PreparedStatement ps = conn.prepareStatement(Query.SQL_CATEGORIES)) {
 			try (ResultSet rs = ps.executeQuery()) {
-
 				List<Category> categories = new ArrayList<>();
-
 				Category cat = null;
-
 				while (rs.next()) {
 					cat = new Category();
 					cat.setId(rs.getInt(1));
@@ -49,9 +45,7 @@ public class CategoryDAO {
 		Category last = null;
 
 		try (PreparedStatement ps = conn.prepareStatement(Query.SQL_PRODUCTS_BY_CATEGORY)) {
-
 			ps.execute();
-
 			try (ResultSet rs = ps.getResultSet()) {
 				while (rs.next()) {
 					if (last == null || !(last.getName().equals(rs.getString(2)))) {
@@ -65,7 +59,8 @@ public class CategoryDAO {
 					prod.setId(rs.getInt(3));
 					prod.setName(rs.getString(4));
 					prod.setDescription(rs.getString(5));
-					prod.setRegisterDate(rs.getTimestamp(6));
+					prod.setPrice(rs.getBigDecimal(6));
+					prod.setRegisterDate(rs.getTimestamp(7));
 					last.addProduct(prod);
 				}
 				return categories;

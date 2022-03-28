@@ -1,14 +1,14 @@
 package application;
 
-import javax.swing.WindowConstants;
+import view.Home;
 
-import view.HomeFrame;
+import javax.swing.*;
 
 public class Program {
-	
+
 	public static void main(String[] args) {
-		HomeFrame frame = new HomeFrame();
-		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		Home home = new Home();
+		home.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 	}
 
 }

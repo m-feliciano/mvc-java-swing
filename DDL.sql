@@ -1,5 +1,5 @@
 
-CREATE DATABASE java_jdbc;
+CREATE DATABASE java-jdbc;
 	
 	CREATE TABLE IF NOT EXISTS tb_category (
 		id INT NOT NULL, 
@@ -38,7 +38,7 @@ ALTER TABLE tb_product ALTER column id SET DEFAULT nextval('tb_product_id_seq');
 		('Teclado','Teclado mecânico super leve', 3),
 		('Mouse Gamer','Mouse 3 velocidades RGB', 1),
 		('Mouse XXX Gamer','Mouse Ultra caro', 1),
-		('XBOX','XBOX GOLD PASS 1 YEAR', 1),
+        ('XBOX','XBOX GOLD PASS 1 YEAR', 1),
 		('SOM','Baruho total 220v', 2),
 		('Google Home','Google home office', 3),
 		('Quadro Decorativo','Brasil fabril', 3),

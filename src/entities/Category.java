@@ -4,18 +4,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
 public class Category {
 
 	private Integer id;
 	private String name;
+
+	@Setter(value = AccessLevel.NONE)
 	List<Product> products = new ArrayList<>();
 
-	public Category() {
-		super();
-	}
-
 	public Category(String name) {
-		super();
 		this.name = name;
 	}
 
@@ -23,26 +28,6 @@ public class Category {
 		super();
 		this.id = id;
 		this.name = name;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public List<Product> getProducts() {
-		return products;
 	}
 
 	public void addProduct(Product prod) {
@@ -53,7 +38,7 @@ public class Category {
 	public String toString() {
 		return name;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);

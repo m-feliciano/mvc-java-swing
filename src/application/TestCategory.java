@@ -13,11 +13,10 @@ public class TestCategory {
 		CategoryController controller = new CategoryController();
 
 //		List<Category> categories = dao.getCategories();
-//
 //		categories.forEach(System.out::println);
 
 		List<Category> listCategories = controller.listProductByCategory();
-		listCategories.stream().forEach(c -> {
+		listCategories.forEach(c -> {
 			System.out.println(c.getName());
 			for (Product prod : c.getProducts()) {
 				System.out.println("- " + prod.getName());
