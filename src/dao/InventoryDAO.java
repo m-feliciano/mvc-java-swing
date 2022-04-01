@@ -9,7 +9,7 @@ import java.util.List;
 
 public class InventoryDAO {
 
-    private Connection conn;
+    private final Connection conn;
 
     public InventoryDAO(Connection conn) {
         this.conn = conn;
@@ -42,7 +42,7 @@ public class InventoryDAO {
         try (PreparedStatement ps = conn.prepareStatement(Query.SQL_INVENTORY_SELECT_LIST)) {
             try (ResultSet rs = ps.executeQuery()) {
                 List<Inventory> inventories = new ArrayList<>();
-                Inventory inventory = null;
+                Inventory inventory;
                 while (rs.next()) {
                     inventory = new Inventory();
                     inventory.setId(rs.getInt("id"));
@@ -52,7 +52,6 @@ public class InventoryDAO {
                     inventory.setDescription(rs.getString("description"));
                     inventories.add(inventory);
                 }
-                System.out.println(inventories);
                 return inventories;
             } catch (Exception e) {
                 throw new RuntimeException(e.getMessage());
@@ -94,7 +93,7 @@ public class InventoryDAO {
 
             int affectedRows = ps.executeUpdate();
             if (affectedRows > 0) {
-                System.out.println("Successufully update constraint");
+                System.out.println("Successfully update constraint");
             }
 
         } catch (SQLException e) {
@@ -109,7 +108,7 @@ public class InventoryDAO {
             ps.executeUpdate();
             int affectedRows = ps.getUpdateCount();
             if (affectedRows > 0) {
-                System.out.println("Successufully delete constraint\nAffected rows: " + affectedRows);
+                System.out.println("Successfully delete constraint\nAffected rows: " + affectedRows);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage());

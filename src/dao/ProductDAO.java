@@ -9,7 +9,7 @@ import java.util.List;
 
 public class ProductDAO {
 
-    private Connection conn;
+    private final Connection conn;
 
     public ProductDAO(Connection conn) {
         this.conn = conn;
@@ -32,11 +32,11 @@ public class ProductDAO {
         }
     }
 
-    public List<Product> getProducts() {
+    public List<Product> list() {
         try (PreparedStatement ps = conn.prepareStatement(Query.SQL_PRODUCTS_SELECT)) {
             try (ResultSet rs = ps.executeQuery()) {
                 List<Product> products = new ArrayList<>();
-                Product prod = null;
+                Product prod;
                 while (rs.next()) {
                     prod = instantiateProduct(rs);
                     products.add(prod);
@@ -50,7 +50,7 @@ public class ProductDAO {
         }
     }
 
-    public void insert(Product prod) {
+    public void save(Product prod) {
         try (PreparedStatement ps = conn.prepareStatement(Query.SQL_PRODUCT_INSERT, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, prod.getName());
             ps.setString(2, prod.getDescription());
@@ -80,7 +80,7 @@ public class ProductDAO {
 
             int affectedRows = ps.executeUpdate();
             if (affectedRows > 0) {
-                System.out.println("Successufully update product");
+                System.out.println("Successfully update product");
             }
 
         } catch (SQLException e) {
@@ -94,7 +94,7 @@ public class ProductDAO {
             ps.executeUpdate();
             int affectedRows = ps.getUpdateCount();
             if (affectedRows > 0) {
-                System.out.println("Successufully delete product\nAffected rows: " + affectedRows);
+                System.out.println("Successfully delete product\nAffected rows: " + affectedRows);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage());

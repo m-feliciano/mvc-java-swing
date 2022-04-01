@@ -9,7 +9,7 @@ import java.util.List;
 
 public class ProductController {
 
-    private ProductDAO productDAO;
+    private final ProductDAO productDAO;
 
     public ProductController() {
         Connection conn = new ConnectionFactory().getConnection();
@@ -17,7 +17,7 @@ public class ProductController {
     }
 
     public void save(Product product) {
-        this.productDAO.insert(product);
+        this.productDAO.save(product);
     }
 
     public void delete(int id) {
@@ -25,7 +25,7 @@ public class ProductController {
     }
 
     public List<Product> list() {
-        return this.productDAO.getProducts();
+        return this.productDAO.list();
     }
 
     public List<Product> getProductsByCategoryName(String name) {

@@ -16,6 +16,10 @@ public abstract class Query {
             SELECT c.id, c.name, p.id, p.name, p.description, p.price, p.created_at
             FROM tb_category c INNER JOIN tb_product p ON c.id = p.category_id;
             """;
+    public static final String SQL_CATEGORY_UPDATE = "UPDATE tb_category SET name=? WHERE id=?";
+    public static final String SQL_CATEGORY_DELETE = "DELETE FROM tb_category WHERE id=?";
+    public static final String SQL_CATEGORY_INSERT = "INSERT INTO tb_category(name) VALUES (?)";
+    public static final String SQL_CATEGORY_SELECT_BY_ID = "SELECT id, name FROM tb_category WHERE id =?";
 
     public static final String SQL_ADDRESS_SELECT = "SELECT cep, number, place, local, user_id FROM tb_address WHERE user_id = ?";
     public static final String SQL_ADDRESS_UPDATE = "UPDATE tb_address SET cep= ?, number=?, place=?, local=? WHERE user_id = ?";
@@ -28,4 +32,5 @@ public abstract class Query {
     public static final String SQL_INVENTORY_INSERT = "INSERT INTO tb_inventory (product_id, category_id, quantity, description) VALUES (?,?,?,?)";
     public static final String SQL_INVENTORY_DELETE = "DELETE FROM tb_inventory WHERE id = ?";
     public static final String SQL_INVENTORY_UPDATE = "UPDATE tb_inventory SET product_id=?, category_id=?, quantity=?, description=? WHERE id = ?";
+
 }

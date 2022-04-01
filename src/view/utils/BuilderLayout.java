@@ -32,6 +32,7 @@ public class BuilderLayout {
         button.setForeground(Color.BLACK);
         container.add(button);
     }
+
     public static void addButton(Container container, JButton button, int[] bounds, Color background, Color foreground) {
         button.setBounds(bounds[0], bounds[1], bounds[2], bounds[3]);
         button.setBackground(background != null ? background : Color.WHITE);

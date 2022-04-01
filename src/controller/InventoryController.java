@@ -9,7 +9,7 @@ import java.util.List;
 
 public class InventoryController {
 
-    private InventoryDAO inventoryDAO;
+    private final InventoryDAO inventoryDAO;
 
     public InventoryController() {
         Connection conn = new ConnectionFactory().getConnection();
@@ -27,7 +27,8 @@ public class InventoryController {
     public List<Inventory> list() {
         return this.inventoryDAO.get();
     }
-//
+
+    //
 //    public List<Product> getProductsByCategoryId(int id) {
 //        return this.inventoryDAO.getProductsByCategoryId(id);
 //    }

@@ -21,7 +21,9 @@ import java.util.List;
 
 public class ProductFrame extends JFrame {
 
+    @Serial
     private static final long serialVersionUID = -3290552204306899863L;
+    private static final Font GLOBAL = new Font("SansSerif", Font.PLAIN, 14);
     private final transient ProductController productController;
     private JTextField nameTxt;
     private JTextField descriptionTxt;
@@ -32,7 +34,6 @@ public class ProductFrame extends JFrame {
     private JButton cleanBtn;
     private JTable table;
     private DefaultTableModel model;
-    private static final Font GLOBAL = new Font("SansSerif", Font.PLAIN, 14);
 
     public ProductFrame() {
         super("PRODUCT CRUD");
@@ -175,14 +176,14 @@ public class ProductFrame extends JFrame {
         table.getColumnModel().getColumn(3).setCellRenderer(cellRendererRight);
         table.getColumnModel().getColumn(4).setCellRenderer(cellRendererCenter);
         table.setBounds(45, 250, 570, 170);
+        table.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
         table.setFont(GLOBAL);
         container.add(table);
     }
 
     private void update() {
         Object obj = getInputObject();
-        if (obj instanceof Integer) {
-            Integer id = (Integer) obj;
+        if (obj instanceof Integer id) {
             String name = (String) model.getValueAt(table.getSelectedRow(), 1);
             String description = (String) model.getValueAt(table.getSelectedRow(), 2);
             BigDecimal price = convertToPrice(String.valueOf(model.getValueAt(table.getSelectedRow(), 3)));
@@ -215,9 +216,8 @@ public class ProductFrame extends JFrame {
             Message.showError("must provider a name and description!");
             return false;
         }
-
         BigDecimal price = convertToPrice(priceTxt.getText());
-        if (price == null || price.compareTo(BigDecimal.ONE) < 0) {
+        if (price == null || !(price.compareTo(BigDecimal.ZERO) > 0)) {
             Message.showError("price must be greater than R$1.00. format.: 10.00");
             return false;
         }
@@ -229,16 +229,15 @@ public class ProductFrame extends JFrame {
     }
 
     private BigDecimal convertToPrice(String str) {
-        if (Validation.validate(str)) {
-            System.out.println(str);
-            try {
-                return new BigDecimal(str).setScale(2, RoundingMode.HALF_UP);
-            } catch (Exception e) {
-                Message.showError("Must provide a valid number");
-                throw new IllegalArgumentException("Invalid price value");
-            }
+        if (!Validation.validate(str)) {
+            return null;
         }
-        return null;
+        try {
+            return new BigDecimal(str).setScale(2, RoundingMode.HALF_UP);
+        } catch (Exception e) {
+            Message.showError("Must provide a valid number");
+            throw new IllegalArgumentException("Invalid price value");
+        }
     }
 
     private void populateTable() {

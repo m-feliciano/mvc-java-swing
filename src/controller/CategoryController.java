@@ -16,8 +16,24 @@ public class CategoryController {
         this.categoryDAO = new CategoryDAO(conn);
     }
 
+    public void save(Category category) {
+        this.categoryDAO.save(category);
+    }
+
+    public void delete(int id) {
+        this.categoryDAO.delete(id);
+    }
+
+    public Category findById(int id) {
+        return this.categoryDAO.findById(id);
+    }
+
+    public void update(Category category) {
+        this.categoryDAO.update(category);
+    }
+
     public List<Category> list() {
-        return this.categoryDAO.getCategories();
+        return this.categoryDAO.list();
     }
 
     public List<Category> listProductByCategory() {
