@@ -29,7 +29,7 @@ public class CategoryFrame extends JFrame {
     private DefaultTableModel model;
 
     public CategoryFrame() {
-        super("Category CRUD");
+        super("Category");
         categoryController = new CategoryController();
         Container container = getContentPane();
         setLayout(null);

@@ -36,7 +36,7 @@ public class ProductFrame extends JFrame {
     private DefaultTableModel model;
 
     public ProductFrame() {
-        super("PRODUCT CRUD");
+        super("PRODUCT");
         productController = new ProductController();
         Container container = getContentPane();
         setLayout(null);
@@ -125,7 +125,7 @@ public class ProductFrame extends JFrame {
         BuilderLayout.addButton(container, saveBtn, savaBounds, new Color(40, 167, 69));
 
         cleanBtn = new JButton("Clean");
-        int[] cleanBounds = {45 + 90, 190, 80, 25};
+        int[] cleanBounds = {135, 190, 80, 25};
         BuilderLayout.addButton(container, cleanBtn, cleanBounds, new Color(108, 117, 125));
 
         deleteBtn = new JButton("Delete");
@@ -203,8 +203,7 @@ public class ProductFrame extends JFrame {
 
     private void delete() {
         Object obj = getInputObject();
-        if (obj instanceof Integer) {
-            int id = (int) obj;
+        if (obj instanceof Integer id) {
             productController.delete(id);
             Message.showMessage("successfully deleted product id: " + id);
             model.removeRow(table.getSelectedRow());
@@ -217,7 +216,7 @@ public class ProductFrame extends JFrame {
             return false;
         }
         BigDecimal price = convertToPrice(priceTxt.getText());
-        if (price == null || !(BigDecimal.ZERO.compareTo(price) > 0)) {
+        if (price == null || !(price.compareTo(BigDecimal.ZERO) > 0)) {
             Message.showError("price must be greater than R$1.00. format.: 10.00");
             return false;
         }

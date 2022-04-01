@@ -28,7 +28,7 @@ public class Profile extends JFrame {
     private JTextField numberTxt;
 
     public Profile() {
-        super("PROFILE CRUD");
+        super("PROFILE");
         addressController = new AddressController();
         userController = new UserController();
         Container container = getContentPane();

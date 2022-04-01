@@ -37,6 +37,7 @@ public class InventoryFrame extends JFrame {
     private JComboBox<Product> productCombo;
     private JButton refreshComboCategoryBtn;
     private JButton refreshComboProductBtn;
+    private JButton refreshTableBtn;
     private JButton saveBtn;
     private JButton editBtn;
     private JButton cleanBtn;
@@ -51,7 +52,7 @@ public class InventoryFrame extends JFrame {
     private DefaultTableModel model;
 
     public InventoryFrame() {
-        super("INVENTORY CRUD");
+        super("INVENTORY MVC");
         categoryController = new CategoryController();
         productController = new ProductController();
         inventoryController = new InventoryController();
@@ -106,6 +107,7 @@ public class InventoryFrame extends JFrame {
 
         refreshComboCategoryBtn.addActionListener(e -> updateComboCategory());
         refreshComboProductBtn.addActionListener(e -> updateComboProduct());
+        refreshTableBtn.addActionListener(e -> updateTable());
         populateTable();
     }
 
@@ -191,29 +193,33 @@ public class InventoryFrame extends JFrame {
         int[] editUserBtnBounds = {510, 30, 80, 25};
         BuilderLayout.addButton(container, editUserBtn, editUserBtnBounds, Color.BLUE, Color.WHITE);
 
-        prodManagerBtn = new JButton("Edit");
+        prodManagerBtn = new JButton("Products");
         int[] prodManagerBounds = {265, 60, 100, 25};
-        BuilderLayout.addButton(container, prodManagerBtn, prodManagerBounds);
+        BuilderLayout.addButton(container, prodManagerBtn, prodManagerBounds, Color.DARK_GRAY, Color.WHITE);
 
         refreshComboProductBtn = new JButton("Refresh");
-        int[] refreshProdManagerBounds = {375, 60, 100, 25};
-        BuilderLayout.addButton(container, refreshComboProductBtn, refreshProdManagerBounds, new Color(108, 117, 125), Color.WHITE);
+        int[] refreshProdManagerBounds = {375, 60, 80, 25};
+        BuilderLayout.addButton(container, refreshComboProductBtn, refreshProdManagerBounds);
 
-        categoryManagerBtn = new JButton("Edit");
+        categoryManagerBtn = new JButton("Categories");
         int[] catManagerBounds = {45 + 220, 120, 100, 25};
-        BuilderLayout.addButton(container, categoryManagerBtn, catManagerBounds);
+        BuilderLayout.addButton(container, categoryManagerBtn, catManagerBounds, Color.DARK_GRAY, Color.WHITE);
 
         refreshComboCategoryBtn = new JButton("Refresh");
-        int[] refreshCatManagerBounds = {155 + 220, 120, 100, 25};
-        BuilderLayout.addButton(container, refreshComboCategoryBtn, refreshCatManagerBounds, new Color(108, 117, 125), Color.WHITE);
+        int[] refreshCatManagerBounds = {155 + 220, 120, 80, 25};
+        BuilderLayout.addButton(container, refreshComboCategoryBtn, refreshCatManagerBounds);
 
         saveBtn = new JButton("Save");
         int[] savaBounds = {45, 280, 80, 25};
         BuilderLayout.addButton(container, saveBtn, savaBounds, new Color(40, 167, 69), Color.WHITE);
 
         cleanBtn = new JButton("Clean");
-        int[] cleanBounds = {45 + 90, 280, 80, 25};
+        int[] cleanBounds = {135, 280, 80, 25};
         BuilderLayout.addButton(container, cleanBtn, cleanBounds, new Color(108, 117, 125), Color.WHITE);
+
+        refreshTableBtn = new JButton("Refresh");
+        int[] refreshTableBounds = {225, 280, 80, 25};
+        BuilderLayout.addButton(container, refreshTableBtn, refreshTableBounds);
 
         deleteBtn = new JButton("Delete");
         int[] deleteBtnBounds = {45, 500, 80, 25};
@@ -321,11 +327,11 @@ public class InventoryFrame extends JFrame {
 
     private boolean save() {
         if (!InputValidation.validate(descriptionTxt)) {
-            Message.showError("ERROR: must provider a description!");
+            Message.showError("must provider a description!");
             return false;
         }
         if (!InputValidation.validate(quantityTxt)) {
-            Message.showError("ERROR: must provider a quantity!");
+            Message.showError("must provider a quantity!");
             return false;
         }
         Category category = (Category) categoryCombo.getSelectedItem();

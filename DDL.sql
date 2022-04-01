@@ -1,4 +1,4 @@
-CREATE DATABASE jdbc;
+CREATE DATABASE teste_dm;
 
 CREATE TABLE IF NOT EXISTS tb_category
 (
@@ -58,30 +58,25 @@ ALTER TABLE tb_inventory
 INSERT INTO tb_category(name)
 VALUES ('Gamer'),
        ('Office'),
-       ('Escritorio'),
+       ('Cozinha'),
        ('Informática');
 
 INSERT INTO tb_product(name, description, price)
 VALUES ('iMac', 'Apple iMac 1TB 16GB 256GB', 20.12),
        ('Teclado', 'Teclado mecânico super leve', 30.32),
-       ('Mouse Gamer', 'Mouse 3 velocidades RGB', 25.33),
-       ('Mouse XXX Gamer', 'Mouse Ultra caro', 45.20),
-       ('XBOX', 'XBOX GOLD PASS 1 YEAR', 100.09),
-       ('SOM', 'Baruho total 220v', 2000.99),
+       ('Mouse XXX Gamer', 'Mouse Ultra caro', 450.20),
        ('Google Home', 'Google home office', 300.45),
        ('Quadro Decorativo', 'Brasil fabril', 30.00),
        ('Luminaria', 'COR AMARELADA', 320.78),
        ('Smart TV', 'Alexa, Netflix etc RGB', 3400.99);
 
 INSERT INTO tb_inventory(description, quantity, product_id, category_id)
-VALUES ('Deposito am', 2, 1, 1),
-       ('Deposito pi', 2, 2, 2),
-       ('Deposito ba', 5, 3, 3),
-       ('Deposito rn', 2, 4, 4),
-       ('Deposito rs', 1, 5, 2),
-       ('Deposito mg', 7, 6, 3),
-       ('Deposito sp', 1, 7, 3),
-       ('Deposito rj', 4, 8, 2);
+VALUES ('Lote-04-22SP', 2, 1, 1),
+       ('Lote-04-22RJ', 2, 2, 2),
+       ('Lote-04-22BA', 5, 3, 3),
+       ('Lote-04-22MG', 2, 4, 4),
+       ('Lote-04-22RS', 1, 5, 2),
+       ('Lote-04-22RN', 7, 6, 3);
 
 CREATE TABLE IF NOT EXISTS tb_user
 (
@@ -122,7 +117,7 @@ ALTER TABLE tb_address
 
 
 INSERT INTO tb_user(username, email, password)
-VALUES ('teste','teste','123');
+VALUES ('teste', 'teste', '123');
 
 INSERT INTO tb_address(cep, number, place, local, user_id)
 VALUES ('04707000', '86', 'Av Roque roll', 'São paulo', 1);
