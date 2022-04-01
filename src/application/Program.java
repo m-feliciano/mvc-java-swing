@@ -1,13 +1,13 @@
 package application;
 
-import view.Inventory;
+import view.InventoryFrame;
 
 import javax.swing.*;
 
 public class Program {
 
     public static void main(String[] args) {
-        Inventory home = new Inventory();
+        InventoryFrame home = new InventoryFrame();
         home.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 

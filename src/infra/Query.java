@@ -23,9 +23,9 @@ public abstract class Query {
     public static final String SQL_USER_UPDATE = "UPDATE tb_user SET username=?, email=? WHERE id = ?";
     public static final String SQL_USER_SELECT = "SELECT id, username, email FROM tb_user WHERE id = ?";
 
-    public static final String SQL_INVENTORY_SELECT = "SELECT id, description, quantity, product_id, category_id FROM tb_inventory ORDER BY id";
+    public static final String SQL_INVENTORY_SELECT_LIST = "SELECT id, description, quantity, product_id, category_id FROM tb_inventory ORDER BY id";
     public static final String SQL_INVENTORY_SELECT_BY_ID = "SELECT id, description, quantity, product_id, category_id FROM tb_inventory WHERE id = ?";
-    public static final String SQL_INVENTORY_INSERT = "INSERT INTO tb_inventory (description, quantity, product_id, category_id) VALUES (?,?,?,?)";
+    public static final String SQL_INVENTORY_INSERT = "INSERT INTO tb_inventory (product_id, category_id, quantity, description) VALUES (?,?,?,?)";
     public static final String SQL_INVENTORY_DELETE = "DELETE FROM tb_inventory WHERE id = ?";
-    public static final String SQL_INVENTORY_UPDATE = "UPDATE tb_inventory SET description=?, quantity=?, product_id=?, category_id=? WHERE id = ?";
+    public static final String SQL_INVENTORY_UPDATE = "UPDATE tb_inventory SET product_id=?, category_id=?, quantity=?, description=? WHERE id = ?";
 }

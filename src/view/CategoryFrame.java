@@ -2,9 +2,11 @@ package view;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.Serial;
 
 public class CategoryFrame extends JFrame {
 
+    @Serial
     private static final long serialVersionUID = -3290552204306899863L;
 
     public CategoryFrame() {

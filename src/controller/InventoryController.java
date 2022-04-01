@@ -2,7 +2,6 @@ package controller;
 
 import dao.InventoryDAO;
 import entities.Inventory;
-import entities.Product;
 import infra.ConnectionFactory;
 
 import java.sql.Connection;
@@ -28,15 +27,15 @@ public class InventoryController {
     public List<Inventory> list() {
         return this.inventoryDAO.get();
     }
-
-    public List<Product> getProductsByCategoryId(int id) {
-        return this.inventoryDAO.getProductsByCategoryId(id);
-    }
-
-    public Inventory findById(int id) {
-        return this.inventoryDAO.findById(id);
-    }
-
+//
+//    public List<Product> getProductsByCategoryId(int id) {
+//        return this.inventoryDAO.getProductsByCategoryId(id);
+//    }
+//
+//    public Inventory findById(int id) {
+//        return this.inventoryDAO.findById(id);
+//    }
+//
     public void update(Inventory inventory) {
         this.inventoryDAO.update(inventory);
     }

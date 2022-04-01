@@ -1,8 +1,10 @@
 package view;
 
 import controller.CategoryController;
+import controller.InventoryController;
 import controller.ProductController;
 import entities.Category;
+import entities.Inventory;
 import entities.Product;
 import view.utils.BuilderLayout;
 import view.utils.Message;
@@ -15,20 +17,23 @@ import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.io.Serial;
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
 
-public class Inventory extends JFrame {
+public class InventoryFrame extends JFrame {
 
     @Serial
     private static final long serialVersionUID = -3290552204306899863L;
     private static final Color LIGHT_BUTTON = new Color(248, 249, 250);
     private final transient ProductController productController;
     private final transient CategoryController categoryController;
+    private final transient InventoryController inventoryController;
     private JTextField descriptionTxt;
+    private JTextField quantityTxt;
     private JComboBox<Category> categoryCombo;
     private JComboBox<Product> productCombo;
+    private JButton refreshComboCategoryBtn;
+    private JButton refreshComboProductBtn;
     private JButton saveBtn;
     private JButton editBtn;
     private JButton cleanBtn;
@@ -41,11 +46,15 @@ public class Inventory extends JFrame {
     private JTable table;
     private JLabel priceTotalLabel;
     private DefaultTableModel model;
+    private List<Product> products;
+    private List<Category> categories;
+    private static final Font GLOBAL = new Font("SansSerif", Font.PLAIN, 14);
 
-    public Inventory() {
+    public InventoryFrame() {
         super("INVENTORY CRUD");
         categoryController = new CategoryController();
         productController = new ProductController();
+        inventoryController = new InventoryController();
         Container container = getContentPane();
         setLayout(null);
         buildFrame(container);
@@ -85,11 +94,20 @@ public class Inventory extends JFrame {
             Profile login = new Profile();
             login.setVisible(true);
         });
-//        populateTable();
+
+        refreshComboCategoryBtn.addActionListener(e -> {
+            updateComboCategory();
+        });
+
+        refreshComboProductBtn.addActionListener(e -> {
+            updateComboProduct();
+        });
+
+        populateTable();
     }
 
     private void buildFrame(Container container) {
-        final int CONTAINER_HORIZONTAL_SIZE = 800;
+        final int CONTAINER_HORIZONTAL_SIZE = 650;
         final int CONTAINER_VERTICAL_SIZE = 590;
 
         buildProductCategory(container);
@@ -103,22 +121,31 @@ public class Inventory extends JFrame {
         setResizable(false);
         setLocationRelativeTo(null);
     }
+
     private void buildProductCategory(Container container) {
         productCombo = new JComboBox<>();
         productCombo.setBounds(45, 60, 210, 25);
         container.add(productCombo);
-
-        List<Product> products = productController.list();
-        products.forEach(c -> productCombo.addItem(c));
+        updateComboProduct();
     }
 
     private void buildComboCategory(Container container) {
         categoryCombo = new JComboBox<>();
         categoryCombo.setBounds(45, 120, 210, 25);
         container.add(categoryCombo);
+        updateComboCategory();
+    }
 
-        List<Category> categories = categoryController.list();
+    private void updateComboCategory() {
+        categoryCombo.removeAllItems();
+        categories = categoryController.list();
         categories.forEach(c -> categoryCombo.addItem(c));
+    }
+
+    private void updateComboProduct() {
+        productCombo.removeAllItems();
+        products = productController.list();
+        products.forEach(c -> productCombo.addItem(c));
     }
 
     private void buildInputs(Container container) {
@@ -126,10 +153,18 @@ public class Inventory extends JFrame {
         JLabel descriptionLabel = new JLabel("DESCRIPTION");
         int[] descriptionBounds = {45, 160, 240, 20};
         BuilderLayout.addLabel(container, descriptionLabel, descriptionBounds, null, Color.BLACK);
-
         descriptionTxt = new JTextField();
         descriptionTxt.setBounds(45, 185, 320, 25);
         container.add(descriptionTxt);
+
+        // QUANTITY
+        JLabel quantityLabel = new JLabel("QUANTITY");
+        int[] quantityBounds = {45, 215, 240, 20};
+        BuilderLayout.addLabel(container, quantityLabel, quantityBounds, null, Color.BLACK);
+
+        quantityTxt = new JTextField();
+        quantityTxt.setBounds(45, 240, 210, 25);
+        container.add(quantityTxt);
 
         // PRODUCT
         JLabel productLabel = new JLabel("PRODUCT");
@@ -144,29 +179,37 @@ public class Inventory extends JFrame {
         // TOTAL DOC
         priceTotalLabel = new JLabel();
         priceTotalLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
-        int[] priceTotalBounds = {800 - 275, 500, 200, 25};
+        int[] priceTotalBounds = {650 - 275, 500, 200, 25};
         BuilderLayout.addLabel(container, priceTotalLabel, priceTotalBounds, null, Color.BLACK);
     }
 
     private void buildButtons(Container container) {
         editUserBtn = new JButton("Profile");
-        int[] editUserBtnBounds = {800 - 200, 30, 80, 25};
+        int[] editUserBtnBounds = {650 - 150, 30, 80, 25};
         BuilderLayout.addButton(container, editUserBtn, editUserBtnBounds, Color.BLUE, Color.WHITE);
 
-        prodManagerBtn = new JButton("Add");
-        int[] prodManagerBounds = {45 + 220, 60, 100, 25};
+        prodManagerBtn = new JButton("Edit");
+        int[] prodManagerBounds = {265, 60, 100, 25};
         BuilderLayout.addButton(container, prodManagerBtn, prodManagerBounds);
 
-        categoryManagerBtn = new JButton("Add");
+        refreshComboProductBtn = new JButton("Refresh");
+        int[] refreshProdManagerBounds = {375, 60, 100, 25};
+        BuilderLayout.addButton(container, refreshComboProductBtn, refreshProdManagerBounds,  new Color(108, 117, 125), Color.WHITE);
+
+        categoryManagerBtn = new JButton("Edit");
         int[] catManagerBounds = {45 + 220, 120, 100, 25};
         BuilderLayout.addButton(container, categoryManagerBtn, catManagerBounds);
 
+        refreshComboCategoryBtn = new JButton("Refresh");
+        int[] refreshCatManagerBounds = {155 + 220, 120, 100, 25};
+        BuilderLayout.addButton(container, refreshComboCategoryBtn, refreshCatManagerBounds,  new Color(108, 117, 125), Color.WHITE);
+
         saveBtn = new JButton("Save");
-        int[] savaBounds = {45, 230, 80, 25};
+        int[] savaBounds = {45, 280, 80, 25};
         BuilderLayout.addButton(container, saveBtn, savaBounds, new Color(40, 167, 69), Color.WHITE);
 
         cleanBtn = new JButton("Clean");
-        int[] cleanBounds = {45 + 90, 230, 80, 25};
+        int[] cleanBounds = {45 + 90, 280, 80, 25};
         BuilderLayout.addButton(container, cleanBtn, cleanBounds, new Color(108, 117, 125), Color.WHITE);
 
         deleteBtn = new JButton("Delete");
@@ -178,33 +221,39 @@ public class Inventory extends JFrame {
         BuilderLayout.addButton(container, editBtn, editBtnBounds, new Color(255, 197, 7), Color.WHITE);
 
         pageBeforeBtn = new JButton("<");
-        int[] pageBeforeBtnBounds = {340, 500, 50, 25};
+        int[] pageBeforeBtnBounds = {240, 500, 50, 25};
         BuilderLayout.addButton(container, pageBeforeBtn, pageBeforeBtnBounds, LIGHT_BUTTON, null);
 
         pageNextBtn = new JButton(">");
-        int[] pageNextBtnBounds = {400, 500, 50, 25};
+        int[] pageNextBtnBounds = {300, 500, 50, 25};
         BuilderLayout.addButton(container, pageNextBtn, pageNextBtnBounds, LIGHT_BUTTON, null);
     }
 
     private void buildTable(Container container) {
+
         this.model = new DefaultTableModel() {
             @Serial
             private static final long serialVersionUID = 1L;
 
             @Override
             public boolean isCellEditable(int row, int column) {
-                return (column != 4 && column != 0);
+                return (column != 0 && column != 2 && column != 5);
             }
         };
 
+        this.model.addColumn("Id");
+        this.model.addColumn("ProductId");
+        this.model.addColumn("Product name");
+        this.model.addColumn("CategoryId");
+        this.model.addColumn("Quantity");
+        this.model.addColumn("Inventory price");
+        this.model.addColumn("Description");
         this.table = new JTable(model);
-        this.model.addColumn("Product Id");
-        this.model.addColumn("Product Name");
-        this.model.addColumn("Product Description");
-        this.model.addColumn("Product Price");
-        this.model.addColumn("Created At");
+        this.table.setFont(GLOBAL);
+
+
         // Defines table's column width.
-        int[] columnsWidth = {30, 200, 260, 90, 120};
+        int[] columnsWidth = {40, 40, 135, 40, 40, 90, 200};
         // Configures table's column width.
         int i = 0;
         for (int width : columnsWidth) {
@@ -214,20 +263,41 @@ public class Inventory extends JFrame {
             column.setPreferredWidth(width);
         }
         DefaultTableCellRenderer cellRendererCenter = new DefaultTableCellRenderer();
+        DefaultTableCellRenderer cellRendererNotEnabled = new DefaultTableCellRenderer();
+        DefaultTableCellRenderer cellRendererEnabled = new DefaultTableCellRenderer();
         DefaultTableCellRenderer cellRendererRight = new DefaultTableCellRenderer();
         cellRendererCenter.setHorizontalAlignment(SwingConstants.CENTER);
-        cellRendererCenter.setEnabled(false);
+        cellRendererEnabled.setHorizontalAlignment(SwingConstants.CENTER);
         cellRendererCenter.setFocusable(false);
+        cellRendererCenter.setEnabled(false);
+        cellRendererNotEnabled.setEnabled(false);
+        cellRendererNotEnabled.setFocusable(false);
         cellRendererRight.setHorizontalAlignment(SwingConstants.RIGHT);
         table.getColumnModel().getColumn(0).setCellRenderer(cellRendererCenter);
-        table.getColumnModel().getColumn(3).setCellRenderer(cellRendererRight);
-        table.getColumnModel().getColumn(4).setCellRenderer(cellRendererCenter);
-        table.setBounds(45, 280, 700, 200);
+        table.getColumnModel().getColumn(1).setCellRenderer(cellRendererEnabled);
+        table.getColumnModel().getColumn(2).setCellRenderer(cellRendererNotEnabled);
+        table.getColumnModel().getColumn(3).setCellRenderer(cellRendererEnabled);
+        table.getColumnModel().getColumn(4).setCellRenderer(cellRendererEnabled);
+        table.getColumnModel().getColumn(5).setCellRenderer(cellRendererCenter);
+        table.setBounds(45, 330, 700, 150);
         container.add(table);
     }
 
     private void update() {
         Object obj = getInputObject();
+
+        if (obj instanceof Integer) {
+            Integer id = (Integer) obj;
+            int prodId = Integer.valueOf(model.getValueAt(table.getSelectedRow(), 1).toString());
+            int catid = Integer.valueOf(model.getValueAt(table.getSelectedRow(), 3).toString());
+            int quantity = Integer.valueOf(model.getValueAt(table.getSelectedRow(), 4).toString());
+            String description = (String) model.getValueAt(table.getSelectedRow(), 6);
+            int inventoryId = Integer.valueOf(model.getValueAt(table.getSelectedRow(), 0).toString());
+            Inventory inventory = new Inventory(prodId, catid, quantity, description);
+            inventory.setId(inventoryId);
+            this.inventoryController.update(inventory);
+            Message.showMessage("successfully updated item id: " + id);
+        }
     }
 
     private Object getInputObject() {
@@ -241,43 +311,55 @@ public class Inventory extends JFrame {
 
     private void delete() {
         Object obj = getInputObject();
+        if (obj instanceof Integer) {
+            int id = (int) obj;
+            inventoryController.delete(id);
+            model.removeRow(table.getSelectedRow());
+            Message.showMessage("successfully deleted item id: " + id);
+        }
     }
 
     private boolean save() {
         if (Validation.validate(descriptionTxt)) {
-            Message.showError("ERROR: must provider a name and description!");
+            Message.showError("ERROR: must provider a description!");
             return false;
         }
-//      Product product = new Product(nameTxt.getText(), descriptionTxt.getText(), price);
-//		Category category = (Category) categoryCombo.getSelectedItem();
-//		product.setCategoryId(category.getId());
-//      this.productController.save(product);
+        if (Validation.validate(quantityTxt)) {
+            Message.showError("ERROR: must provider a quantity!");
+            return false;
+        }
+        Category category = (Category) categoryCombo.getSelectedItem();
+        Product product = (Product) productCombo.getSelectedItem();
+        Inventory inventory = new Inventory(product.getId(), category.getId(), Integer.parseInt(quantityTxt.getText()), descriptionTxt.getText());
+        this.inventoryController.save(inventory);
         Message.showMessage("successfully saved");
         return true;
     }
 
     private void populateTable() {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-        List<Product> products = productController.list();
-        products.forEach(p ->
-                model.addRow(new Object[]{
-                        p.getId(),
-                        p.getName(),
-                        p.getDescription(),
-                        p.getPrice(),
-                        sdf.format(p.getRegisterDate())
-                }));
-        Optional<BigDecimal> totalPrice = products.stream()
-                .map(Product::getPrice)
+        List<Inventory> inventories = inventoryController.list();
+        inventories.forEach(e -> model.addRow(new Object[]{e.getId(), e.getProductId(), loadProductBtId(e.getProductId()).getName(), e.getCategoryId(), e.getQuantity(), ("R$" + loadTotalPrice(e)), e.getDescription()}));
+        Optional<BigDecimal> totalPrice = inventories.stream()
+                .map(e -> loadTotalPrice(e))
                 .reduce((t, u) -> u.add(t));
         if (totalPrice.isPresent() && totalPrice.get().compareTo(BigDecimal.ONE) > 0) {
             priceTotalLabel.setText("Document price: R$" + totalPrice.get());
         }
     }
 
+    private BigDecimal loadTotalPrice(Inventory e) {
+        return new BigDecimal(String.valueOf(loadProductBtId(e.getProductId()).getPrice())).multiply(new BigDecimal(e.getQuantity()));
+    }
+
+    private Product loadProductBtId(int id) {
+        return productController.findById(id);
+    }
+
     private void cleanInputs() {
         this.descriptionTxt.setText("");
+        this.quantityTxt.setText("");
         this.categoryCombo.setSelectedIndex(0);
+        this.productCombo.setSelectedIndex(0);
     }
 
     private void updateTable() {
@@ -286,6 +368,6 @@ public class Inventory extends JFrame {
     }
 
     private void cleanTable() {
-        model.getDataVector().clear();
+        model.getDataVector().removeAllElements();
     }
 }

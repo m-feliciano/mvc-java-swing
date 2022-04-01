@@ -8,8 +8,8 @@ public class Validation {
         return !(nameTxt.getText().isEmpty() || descriptionTxt.getText().isEmpty());
     }
 
-    public static boolean validate(JTextField descriptionTxt) {
-        return !(descriptionTxt.getText().isEmpty());
+    public static boolean validate(JTextField jTextField) {
+        return jTextField.getText().isEmpty();
     }
 
     public static boolean validate(String str) {

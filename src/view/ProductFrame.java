@@ -28,6 +28,7 @@ public class ProductFrame extends JFrame {
     private JTextField priceTxt;
     private JButton saveBtn;
     private JButton editBtn;
+    private JButton deleteBtn;
     private JButton cleanBtn;
     private JTable table;
     private DefaultTableModel model;
@@ -52,8 +53,13 @@ public class ProductFrame extends JFrame {
             updateTable();
         });
 
-        cleanBtn.addActionListener(e -> cleanInputs());
+        deleteBtn.addActionListener(e -> {
+            delete();
+            cleanTable();
+            updateTable();
+        });
 
+        cleanBtn.addActionListener(e -> cleanInputs());
         // price input validation
         priceTxt.addKeyListener(new KeyAdapter() {
             @Override
@@ -121,9 +127,14 @@ public class ProductFrame extends JFrame {
         int[] cleanBounds = {45 + 90, 190, 80, 25};
         BuilderLayout.addButton(container, cleanBtn, cleanBounds, new Color(108, 117, 125));
 
+        deleteBtn = new JButton("Delete");
+        int[] deleteBtnBounds = {45, 440, 80, 25};
+        BuilderLayout.addButton(container, deleteBtn, deleteBtnBounds, new Color(220, 53, 69));
+
         editBtn = new JButton("Update");
-        int[] editBtnBounds = {45, 440, 80, 25};
+        int[] editBtnBounds = {140, 440, 80, 25};
         BuilderLayout.addButton(container, editBtn, editBtnBounds, new Color(255, 197, 7));
+
     }
 
     private void buildTable(Container container) {
@@ -189,8 +200,18 @@ public class ProductFrame extends JFrame {
         return null;
     }
 
+    private void delete() {
+        Object obj = getInputObject();
+        if (obj instanceof Integer) {
+            int id = (int) obj;
+            productController.delete(id);
+            Message.showMessage("successfully deleted product id: " + id);
+            model.removeRow(table.getSelectedRow());
+        }
+    }
+
     private boolean save() {
-        if (Validation.validate(nameTxt, descriptionTxt)) {
+        if (!Validation.validate(nameTxt, descriptionTxt)) {
             Message.showError("must provider a name and description!");
             return false;
         }
