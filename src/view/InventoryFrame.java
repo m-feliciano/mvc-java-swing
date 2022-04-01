@@ -8,7 +8,7 @@ import entities.Inventory;
 import entities.Product;
 import view.utils.BuilderLayout;
 import view.utils.Message;
-import view.utils.Validation;
+import view.utils.InputValidation;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -320,11 +320,11 @@ public class InventoryFrame extends JFrame {
     }
 
     private boolean save() {
-        if (!Validation.validate(descriptionTxt)) {
+        if (!InputValidation.validate(descriptionTxt)) {
             Message.showError("ERROR: must provider a description!");
             return false;
         }
-        if (!Validation.validate(quantityTxt)) {
+        if (!InputValidation.validate(quantityTxt)) {
             Message.showError("ERROR: must provider a quantity!");
             return false;
         }

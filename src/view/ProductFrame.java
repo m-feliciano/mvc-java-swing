@@ -4,7 +4,7 @@ import controller.ProductController;
 import entities.Product;
 import view.utils.BuilderLayout;
 import view.utils.Message;
-import view.utils.Validation;
+import view.utils.InputValidation;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -212,12 +212,12 @@ public class ProductFrame extends JFrame {
     }
 
     private boolean save() {
-        if (!Validation.validate(nameTxt, descriptionTxt)) {
+        if (!InputValidation.validate(nameTxt, descriptionTxt)) {
             Message.showError("must provider a name and description!");
             return false;
         }
         BigDecimal price = convertToPrice(priceTxt.getText());
-        if (price == null || !(price.compareTo(BigDecimal.ZERO) > 0)) {
+        if (price == null || !(BigDecimal.ZERO.compareTo(price) > 0)) {
             Message.showError("price must be greater than R$1.00. format.: 10.00");
             return false;
         }
@@ -229,7 +229,7 @@ public class ProductFrame extends JFrame {
     }
 
     private BigDecimal convertToPrice(String str) {
-        if (!Validation.validate(str)) {
+        if (!InputValidation.validate(str)) {
             return null;
         }
         try {

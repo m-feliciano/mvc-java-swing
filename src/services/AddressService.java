@@ -9,6 +9,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class AddressService {
+
+    private AddressService() {}
+
     private final static String webService = "http://viacep.com.br/ws/";
 
     public static Address getAddressFromCEP(String cep) throws Exception {

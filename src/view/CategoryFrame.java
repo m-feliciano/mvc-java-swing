@@ -4,7 +4,7 @@ import controller.CategoryController;
 import entities.Category;
 import view.utils.BuilderLayout;
 import view.utils.Message;
-import view.utils.Validation;
+import view.utils.InputValidation;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -164,7 +164,7 @@ public class CategoryFrame extends JFrame {
     }
 
     private boolean save() {
-        if (!Validation.validate(nameTxt)) {
+        if (!InputValidation.validate(nameTxt)) {
             Message.showError("must provider a name!");
             return false;
         }

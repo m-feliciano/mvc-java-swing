@@ -9,9 +9,11 @@ import view.utils.Message;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.Serial;
 
 public class Profile extends JFrame {
 
+    @Serial
     private static final long serialVersionUID = -3290552204306899863L;
     private final transient UserController userController;
     private final transient AddressController addressController;
@@ -65,18 +67,17 @@ public class Profile extends JFrame {
     private void buildFrame(Container container) {
         final int CONTAINER_HORIZONTAL_SIZE = 320;
         final int CONTAINER_VERTICAL_SIZE = 510;
-        final int PADDING_LEFT = 40;
-        buildButtons(container, PADDING_LEFT);
-        buildInputs(container, PADDING_LEFT);
+        buildButtons(container);
+        buildInputs(container);
         setSize(CONTAINER_HORIZONTAL_SIZE, CONTAINER_VERTICAL_SIZE);
         setVisible(true);
         setResizable(false);
         setLocationRelativeTo(null);
     }
 
-    private void buildButtons(Container container, int PADDING_LEFT) {
+    private void buildButtons(Container container) {
         updateBtn = new JButton("Update");
-        int[] logoutBtnBounds = {PADDING_LEFT, 420, 80, 25};
+        int[] logoutBtnBounds = {40, 420, 80, 25};
         addButton(container, updateBtn, logoutBtnBounds, new Color(255, 197, 7), Color.WHITE);
     }
 
@@ -87,68 +88,68 @@ public class Profile extends JFrame {
         container.add(button);
     }
 
-    private void buildInputs(Container container, int PADDING_LEFT) {
+    private void buildInputs(Container container) {
         userIdTxt = new JTextField();
         // USERNAME
         JLabel usernameLabel = new JLabel("USERNAME");
-        int[] usernameBounds = {PADDING_LEFT, 20, 220, 25};
+        int[] usernameBounds = {40, 20, 220, 25};
         BuilderLayout.addLabel(container, usernameLabel, usernameBounds);
 
         usernameTxt = new JTextField();
-        usernameTxt.setBounds(PADDING_LEFT, 45, 220, 25);
+        usernameTxt.setBounds(40, 45, 220, 25);
         container.add(usernameTxt);
 
         // EMAIL
         JLabel emailLabel = new JLabel("EMAIL");
-        int[] priceBounds = {PADDING_LEFT, 80, 240, 25};
+        int[] priceBounds = {40, 80, 240, 25};
         BuilderLayout.addLabel(container, emailLabel, priceBounds);
 
         emailTxt = new JTextField();
-        emailTxt.setBounds(PADDING_LEFT, 105, 220, 25);
+        emailTxt.setBounds(40, 105, 220, 25);
         container.add(emailTxt);
 
         // ADDRESS INFO
         JLabel infoLabel = new JLabel("ADDRESS");
         infoLabel.setFont(new Font("SansSerif", Font.PLAIN, 16));
-        int[] infoBounds = {PADDING_LEFT + 70, 140, 100, 30};
+        int[] infoBounds = {40 + 70, 140, 100, 30};
         BuilderLayout.addLabel(container, infoLabel, infoBounds, null, new Color(179, 179, 179));
 
         // ADDRESS
         JLabel cepLabel = new JLabel("CEP");
-        int[] cepBounds = {PADDING_LEFT, 170, 220, 25};
+        int[] cepBounds = {40, 170, 220, 25};
         BuilderLayout.addLabel(container, cepLabel, cepBounds);
 
         cepTxt = new JTextField();
-        cepTxt.setBounds(PADDING_LEFT, 195, 220, 25);
+        cepTxt.setBounds(40, 195, 220, 25);
         container.add(cepTxt);
 
         // NUMBER
         JLabel numberLabel = new JLabel("NUMBER");
-        int[] numberBounds = {PADDING_LEFT, 230, 220, 25};
+        int[] numberBounds = {40, 230, 220, 25};
         BuilderLayout.addLabel(container, numberLabel, numberBounds);
 
         numberTxt = new JTextField();
-        numberTxt.setBounds(PADDING_LEFT, 255, 220, 25);
+        numberTxt.setBounds(40, 255, 220, 25);
         container.add(numberTxt);
 
         // STREET
         JLabel streetLabel = new JLabel("STREET");
-        int[] streetBounds = {PADDING_LEFT, 290, 220, 25};
+        int[] streetBounds = {40, 290, 220, 25};
         BuilderLayout.addLabel(container, streetLabel, streetBounds);
 
         placeTxt = new JTextField();
         placeTxt.setEditable(false);
-        placeTxt.setBounds(PADDING_LEFT, 315, 220, 25);
+        placeTxt.setBounds(40, 315, 220, 25);
         container.add(placeTxt);
 
         // LOCAL STATE
         JLabel stateLabel = new JLabel("LOCAL");
-        int[] stateBounds = {PADDING_LEFT, 350, 220, 25};
+        int[] stateBounds = {40, 350, 220, 25};
         BuilderLayout.addLabel(container, stateLabel, stateBounds);
 
         stateTxt = new JTextField();
         stateTxt.setEditable(false);
-        stateTxt.setBounds(PADDING_LEFT, 375, 220, 25);
+        stateTxt.setBounds(40, 375, 220, 25);
         container.add(stateTxt);
     }
 

@@ -1,6 +1,8 @@
 package infra;
 
-public abstract class Query {
+public class Query {
+
+    private Query(){}
 
     public static final String SQL_PRODUCTS_SELECT = "SELECT id, name, description, price, created_at FROM tb_product ORDER BY id";
     public static final String SQL_PRODUCT_SELECT_BY_ID = "SELECT id, name, description, price, created_at FROM tb_product WHERE id = ?";
