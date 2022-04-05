@@ -1,11 +1,12 @@
 package controller;
 
+import java.sql.Connection;
+import java.util.List;
+
 import dao.InventoryDAO;
 import entities.Inventory;
 import infra.ConnectionFactory;
-
-import java.sql.Connection;
-import java.util.List;
+import vo.InventoryVO;
 
 public class InventoryController {
 
@@ -24,8 +25,8 @@ public class InventoryController {
         this.inventoryDAO.delete(id);
     }
 
-    public List<Inventory> list() {
-        return this.inventoryDAO.get();
+    public List<InventoryVO> list() {
+        return this.inventoryDAO.list();
     }
 
     //

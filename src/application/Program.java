@@ -1,8 +1,8 @@
 package application;
 
-import view.InventoryFrame;
+import javax.swing.WindowConstants;
 
-import javax.swing.*;
+import view.InventoryFrame;
 
 public class Program {
 
@@ -12,3 +12,4 @@ public class Program {
     }
 
 }
+	

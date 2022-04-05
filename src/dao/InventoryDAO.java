@@ -1,11 +1,16 @@
 package dao;
 
-import entities.Inventory;
-import infra.Query;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
+import entities.Inventory;
+import infra.Query;
+import vo.InventoryVO;
 
 public class InventoryDAO {
 
@@ -38,21 +43,24 @@ public class InventoryDAO {
 //        }
 //    }
 
-    public List<Inventory> get() {
-        try (PreparedStatement ps = conn.prepareStatement(Query.SQL_INVENTORY_SELECT_LIST)) {
+    public List<InventoryVO> list() {
+        try (PreparedStatement ps = conn.prepareStatement(Query.SQL_INVENTORY_SELECT_LIST_JOIN)) {
             try (ResultSet rs = ps.executeQuery()) {
-                List<Inventory> inventories = new ArrayList<>();
-                Inventory inventory;
+                List<InventoryVO> inventoriesVo = new ArrayList<>();
+                InventoryVO inventoryVo;
                 while (rs.next()) {
-                    inventory = new Inventory();
-                    inventory.setId(rs.getInt("id"));
-                    inventory.setProductId(rs.getInt("product_id"));
-                    inventory.setCategoryId(rs.getInt("category_id"));
-                    inventory.setQuantity(rs.getInt("quantity"));
-                    inventory.setDescription(rs.getString("description"));
-                    inventories.add(inventory);
+                    inventoryVo = new InventoryVO();
+                    inventoryVo.setId(rs.getInt("id"));
+                    inventoryVo.setProductId(rs.getInt("p_id"));
+                    inventoryVo.setProductName(rs.getString("p_name"));
+                    inventoryVo.setProductPrice(rs.getBigDecimal("p_price"));
+                    inventoryVo.setCategoryId(rs.getInt("c_id"));
+                    inventoryVo.setCategoryName(rs.getString("c_name"));
+                    inventoryVo.setQuantity(rs.getInt("quantity"));
+                    inventoryVo.setDescription(rs.getString("description"));
+                    inventoriesVo.add(inventoryVo);
                 }
-                return inventories;
+                return inventoriesVo;
             } catch (Exception e) {
                 throw new RuntimeException(e.getMessage());
             }
@@ -60,7 +68,6 @@ public class InventoryDAO {
             throw new RuntimeException(e.getMessage());
         }
     }
-
     public void save(Inventory inventory) {
         try (PreparedStatement ps = conn.prepareStatement(Query.SQL_INVENTORY_INSERT, Statement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1, inventory.getProductId());
