@@ -1,10 +1,10 @@
 package controller;
 
+import java.sql.Connection;
+
 import dao.UserDAO;
 import entities.User;
 import infra.ConnectionFactory;
-
-import java.sql.Connection;
 
 public class UserController {
 

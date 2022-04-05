@@ -1,13 +1,14 @@
 package infra;
 
-import com.mchange.v2.c3p0.ComboPooledDataSource;
-
-import javax.sql.DataSource;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
+
+import javax.sql.DataSource;
+
+import com.mchange.v2.c3p0.ComboPooledDataSource;
 
 // Factory using c3p0
 public class ConnectionFactory {

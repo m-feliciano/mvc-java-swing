@@ -9,7 +9,10 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Inventory {
 
-    private Integer id, productId, categoryId, quantity;
+    private Integer id;
+    private Integer productId;
+    private Integer categoryId;
+    private Integer quantity;
     private String description;
 
 

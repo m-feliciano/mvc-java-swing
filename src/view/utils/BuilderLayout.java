@@ -1,9 +1,14 @@
 package view.utils;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Container;
+
+import javax.swing.JButton;
+import javax.swing.JLabel;
 
 public class BuilderLayout {
+
+	private BuilderLayout() {}
 
     public static void addLabel(Container container, JLabel label, int[] bounds) {
         label.setBounds(bounds[0], bounds[1], bounds[2], bounds[3]);

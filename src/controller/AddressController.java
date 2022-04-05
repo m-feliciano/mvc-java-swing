@@ -1,10 +1,10 @@
 package controller;
 
+import java.sql.Connection;
+
 import dao.AddressDAO;
 import entities.Address;
 import infra.ConnectionFactory;
-
-import java.sql.Connection;
 
 public class AddressController {
 

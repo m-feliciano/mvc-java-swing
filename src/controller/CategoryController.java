@@ -1,11 +1,11 @@
 package controller;
 
+import java.sql.Connection;
+import java.util.List;
+
 import dao.CategoryDAO;
 import entities.Category;
 import infra.ConnectionFactory;
-
-import java.sql.Connection;
-import java.util.List;
 
 public class CategoryController {
 

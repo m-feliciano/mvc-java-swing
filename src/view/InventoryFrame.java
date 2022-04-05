@@ -272,7 +272,7 @@ public class InventoryFrame extends JFrame {
 		this.model.addColumn("Quantity");
 		this.model.addColumn("Inventory price");
 		this.model.addColumn("Description");
-		
+
 		this.table = new JTable(model);
 		table.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
 		this.table.setFont(GLOBAL);
@@ -318,9 +318,9 @@ public class InventoryFrame extends JFrame {
 		Object obj = getInputObject();
 		if (obj instanceof Integer id) {
 			int prodId = Integer.parseInt(model.getValueAt(table.getSelectedRow(), 1).toString());
-			int catId = Integer.parseInt(model.getValueAt(table.getSelectedRow(), 3).toString());
-			int quantity = Integer.parseInt(model.getValueAt(table.getSelectedRow(), 5).toString());
-			String description = (String) model.getValueAt(table.getSelectedRow(), 7);
+			int catId = Integer.parseInt(model.getValueAt(table.getSelectedRow(), 4).toString());
+			int quantity = Integer.parseInt(model.getValueAt(table.getSelectedRow(), 6).toString());
+			String description = (String) model.getValueAt(table.getSelectedRow(), 8);
 			int inventoryId = Integer.parseInt(model.getValueAt(table.getSelectedRow(), 0).toString());
 			Inventory inventory = new Inventory(prodId, catId, quantity, description);
 			inventory.setId(inventoryId);
@@ -369,7 +369,6 @@ public class InventoryFrame extends JFrame {
 
 	private void populateTable() {
 		List<InventoryVO> inventoriesVo = inventoryController.list();
-//        inventories.forEach(e -> model.addRow(new Object[]{e.getId(), e.getProductId(), loadProductBtId(e.getProductId()).getName(), e.getCategoryId(), e.getQuantity(), ("R$" + loadTotalPrice(e)), e.getDescription()}));
 		inventoriesVo.forEach(e -> model.addRow(new Object[] { e.getId(), e.getProductId(), e.getProductName(),
 				"R$" + e.getProductPrice(), e.getCategoryId(), e.getCategoryName(), e.getQuantity(),
 				"R$" + getTotalPrice(e), e.getDescription() }));

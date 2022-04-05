@@ -1,13 +1,13 @@
 package entities;
 
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.Objects;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.Objects;
 
 @Getter
 @Setter

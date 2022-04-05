@@ -1,16 +1,8 @@
 package view;
 
-import controller.ProductController;
-import entities.Product;
-import view.utils.BuilderLayout;
-import view.utils.Message;
-import view.utils.InputValidation;
-
-import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Font;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.Serial;
@@ -18,6 +10,23 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.List;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+
+import controller.ProductController;
+import entities.Product;
+import view.utils.BuilderLayout;
+import view.utils.InputValidation;
+import view.utils.Message;
 
 public class ProductFrame extends JFrame {
 
@@ -64,8 +73,8 @@ public class ProductFrame extends JFrame {
         // price input validation
         priceTxt.addKeyListener(new KeyAdapter() {
             @Override
-            public void keyReleased(KeyEvent EVT) {
-                boolean valid = ((EVT.getKeyChar() >= '0' && EVT.getKeyChar() <= '9') || EVT.getKeyChar() == '.' || EVT.getKeyChar() == '\b');
+            public void keyReleased(KeyEvent evt) {
+                boolean valid = ((evt.getKeyChar() >= '0' && evt.getKeyChar() <= '9') || evt.getKeyChar() == '.' || evt.getKeyChar() == '\b');
                 if (!valid) {
                     Message.showError("Please enter numeric value only");
                     priceTxt.setText("");

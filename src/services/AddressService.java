@@ -1,18 +1,19 @@
 package services;
 
-import com.google.gson.Gson;
-import entities.Address;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import com.google.gson.Gson;
+
+import entities.Address;
+
 public class AddressService {
 
     private AddressService() {}
 
-    private final static String webService = "http://viacep.com.br/ws/";
+    private static final String webService = "http://viacep.com.br/ws/";
 
     public static Address getAddressFromCEP(String cep) throws Exception {
         String urlExternal = webService + cep + "/json";
@@ -39,7 +40,7 @@ public class AddressService {
             return gson.fromJson(output, Address.class);
 
         } catch (Exception e) {
-            throw new Exception("ERRO: " + e);
+            throw new RuntimeException("ERRO: " + e);
         }
     }
 }

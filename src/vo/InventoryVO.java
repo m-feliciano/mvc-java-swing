@@ -10,22 +10,22 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class InventoryVO {
-	
+
     private Integer id;
     private Integer productId;
-    private Integer categoryId; 
+    private Integer categoryId;
     private Integer quantity;
-    private String productName; 
-    private BigDecimal productPrice; 
+    private String productName;
+    private BigDecimal productPrice;
     private String categoryName;
     private String description;
-	
+
     @Override
 	public String toString() {
 		return "InventoryVO [id=" + id + ", productId=" + productId + ", categoryId=" + categoryId + ", quantity="
 				+ quantity + ", productName=" + productName + ", productPrice=" + productPrice + ", categoryName="
 				+ categoryName + ", description=" + description + "]";
 	}
-    
-    
+
+
 }

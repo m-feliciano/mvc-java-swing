@@ -1,6 +1,6 @@
 package view.utils;
 
-import javax.swing.*;
+import javax.swing.JTextField;
 
 public  class InputValidation {
 

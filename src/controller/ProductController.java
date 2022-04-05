@@ -1,11 +1,11 @@
 package controller;
 
+import java.sql.Connection;
+import java.util.List;
+
 import dao.ProductDAO;
 import entities.Product;
 import infra.ConnectionFactory;
-
-import java.sql.Connection;
-import java.util.List;
 
 public class ProductController {
 

@@ -1,15 +1,21 @@
 package view;
 
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Font;
+import java.io.Serial;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+
 import controller.AddressController;
 import controller.UserController;
 import entities.Address;
 import entities.User;
 import view.utils.BuilderLayout;
 import view.utils.Message;
-
-import javax.swing.*;
-import java.awt.*;
-import java.io.Serial;
 
 public class Profile extends JFrame {
 

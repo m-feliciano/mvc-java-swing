@@ -29,15 +29,6 @@ public class InventoryController {
         return this.inventoryDAO.list();
     }
 
-    //
-//    public List<Product> getProductsByCategoryId(int id) {
-//        return this.inventoryDAO.getProductsByCategoryId(id);
-//    }
-//
-//    public Inventory findById(int id) {
-//        return this.inventoryDAO.findById(id);
-//    }
-//
     public void update(Inventory inventory) {
         this.inventoryDAO.update(inventory);
     }
