@@ -1,4 +1,4 @@
-package br.com.feliciano.mvc.dao;
+package br.com.feliciano.mvc.infra.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,8 +8,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.feliciano.mvc.entities.Category;
-import br.com.feliciano.mvc.entities.Product;
+import br.com.feliciano.mvc.domain.entities.Category;
+import br.com.feliciano.mvc.domain.entities.Product;
 import br.com.feliciano.mvc.infra.Query;
 
 public class CategoryDAO {
@@ -96,25 +96,26 @@ public class CategoryDAO {
 		try (PreparedStatement ps = conn.prepareStatement(Query.SQL_PRODUCTS_BY_CATEGORY)) {
 			ps.execute();
 			ResultSet rs = ps.getResultSet();
-			List<Category> categories = new ArrayList<>();
+			List<Category> items = new ArrayList<>();
 			Category last = null;
+			Product prod = null;
 			while (rs.next()) {
 				if (last == null || !(last.getName().equals(rs.getString(2)))) {
 					Category cat = new Category();
 					cat.setId(rs.getInt(1));
 					cat.setName(rs.getString(2));
 					last = cat;
-					categories.add(cat);
+					items.add(cat);
 				}
-				Product cat = new Product();
-				cat.setId(rs.getInt(3));
-				cat.setName(rs.getString(4));
-				cat.setDescription(rs.getString(5));
-				cat.setPrice(rs.getBigDecimal(6));
-				cat.setRegisterDate(rs.getTimestamp(7));
-				last.addProduct(cat);
+				prod = new Product();
+				prod.setId(rs.getInt(3));
+				prod.setName(rs.getString(4));
+				prod.setDescription(rs.getString(5));
+				prod.setPrice(rs.getBigDecimal(6));
+				prod.setRegisterDate(rs.getTimestamp(7));
+				last.addProduct(prod);
 			}
-			return categories;
+			return items;
 		} catch (SQLException e) {
 			throw new RuntimeException(e.getMessage());
 		}

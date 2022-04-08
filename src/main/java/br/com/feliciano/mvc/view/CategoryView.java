@@ -18,12 +18,12 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
 import br.com.feliciano.mvc.controller.CategoryController;
-import br.com.feliciano.mvc.entities.Category;
+import br.com.feliciano.mvc.domain.entities.Category;
 import br.com.feliciano.mvc.view.utils.BuilderLayout;
 import br.com.feliciano.mvc.view.utils.InputValidation;
 import br.com.feliciano.mvc.view.utils.Message;
 
-public class CategoryFrame extends JFrame {
+public class CategoryView extends JFrame {
 
     @Serial
     private static final long serialVersionUID = -3290552204306899863L;
@@ -37,7 +37,7 @@ public class CategoryFrame extends JFrame {
     private JTable table;
     private DefaultTableModel model;
 
-    public CategoryFrame() {
+    public CategoryView() {
         super("Category");
         categoryController = new CategoryController();
         Container container = getContentPane();

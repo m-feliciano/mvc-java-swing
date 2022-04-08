@@ -1,11 +1,11 @@
-package br.com.feliciano.mvc.dao;
+package br.com.feliciano.mvc.infra.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import br.com.feliciano.mvc.entities.User;
+import br.com.feliciano.mvc.domain.entities.User;
 import br.com.feliciano.mvc.infra.Query;
 
 public class UserDAO {

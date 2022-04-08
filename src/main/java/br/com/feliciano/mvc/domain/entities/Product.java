@@ -1,6 +1,7 @@
-package br.com.feliciano.mvc.entities;
+package br.com.feliciano.mvc.domain.entities;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
@@ -38,10 +39,19 @@ public class Product {
 
     @Override
     public String toString() {
+    	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         return new StringBuilder()
                 .append(id)
                 .append(" - ")
-                .append(name).toString();
+                .append("name: ")
+                .append(name)
+                .append(", description: ")
+                .append(description)
+                .append(", price: R$")
+                .append(price)
+                .append(", Created_at: ")
+                .append(sdf.format(registerDate))
+                .toString();
     }
 
     @Override

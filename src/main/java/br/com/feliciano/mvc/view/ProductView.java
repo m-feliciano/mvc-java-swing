@@ -23,12 +23,12 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
 import br.com.feliciano.mvc.controller.ProductController;
-import br.com.feliciano.mvc.entities.Product;
+import br.com.feliciano.mvc.domain.entities.Product;
 import br.com.feliciano.mvc.view.utils.BuilderLayout;
 import br.com.feliciano.mvc.view.utils.InputValidation;
 import br.com.feliciano.mvc.view.utils.Message;
 
-public class ProductFrame extends JFrame {
+public class ProductView extends JFrame {
 
     @Serial
     private static final long serialVersionUID = -3290552204306899863L;
@@ -44,7 +44,7 @@ public class ProductFrame extends JFrame {
     private JTable table;
     private DefaultTableModel model;
 
-    public ProductFrame() {
+    public ProductView() {
         super("PRODUCT");
         productController = new ProductController();
         Container container = getContentPane();
@@ -250,7 +250,7 @@ public class ProductFrame extends JFrame {
 
     private void populateTable() {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        List<br.com.feliciano.mvc.entities.Product> products = productController.list();
+        List<br.com.feliciano.mvc.domain.entities.Product> products = productController.list();
         products.forEach(p -> model.addRow(new Object[]{p.getId(), p.getName(), p.getDescription(), p.getPrice(), sdf.format(p.getRegisterDate())}));
     }
 

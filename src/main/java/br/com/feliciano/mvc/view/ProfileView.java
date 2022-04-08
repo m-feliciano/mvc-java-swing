@@ -12,12 +12,12 @@ import javax.swing.JTextField;
 
 import br.com.feliciano.mvc.controller.AddressController;
 import br.com.feliciano.mvc.controller.UserController;
-import br.com.feliciano.mvc.entities.Address;
-import br.com.feliciano.mvc.entities.User;
+import br.com.feliciano.mvc.domain.entities.Address;
+import br.com.feliciano.mvc.domain.entities.User;
 import br.com.feliciano.mvc.view.utils.BuilderLayout;
 import br.com.feliciano.mvc.view.utils.Message;
 
-public class Profile extends JFrame {
+public class ProfileView extends JFrame {
 
     @Serial
     private static final long serialVersionUID = -3290552204306899863L;
@@ -33,7 +33,7 @@ public class Profile extends JFrame {
     private JTextField placeTxt;
     private JTextField numberTxt;
 
-    public Profile() {
+    public ProfileView() {
         super("PROFILE");
         addressController = new AddressController();
         userController = new UserController();

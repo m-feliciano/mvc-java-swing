@@ -1,6 +1,6 @@
-package br.com.feliciano.mvc.services;
+package br.com.feliciano.mvc.domain.services;
 
-import br.com.feliciano.mvc.entities.Address;
+import br.com.feliciano.mvc.domain.entities.Address;
 
 public class AddressServiceTest {
 

@@ -2,9 +2,9 @@ package br.com.feliciano.mvc.controller;
 
 import java.sql.Connection;
 
-import br.com.feliciano.mvc.dao.UserDAO;
-import br.com.feliciano.mvc.entities.User;
+import br.com.feliciano.mvc.domain.entities.User;
 import br.com.feliciano.mvc.infra.ConnectionFactory;
+import br.com.feliciano.mvc.infra.dao.UserDAO;
 
 public class UserController {
 

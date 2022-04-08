@@ -1,4 +1,4 @@
-package br.com.feliciano.mvc.entities.vo;
+package br.com.feliciano.mvc.domain.entities.vo;
 
 import java.math.BigDecimal;
 

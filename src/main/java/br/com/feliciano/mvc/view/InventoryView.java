@@ -26,15 +26,15 @@ import javax.swing.table.TableColumn;
 import br.com.feliciano.mvc.controller.CategoryController;
 import br.com.feliciano.mvc.controller.InventoryController;
 import br.com.feliciano.mvc.controller.ProductController;
-import br.com.feliciano.mvc.entities.Category;
-import br.com.feliciano.mvc.entities.Inventory;
-import br.com.feliciano.mvc.entities.Product;
-import br.com.feliciano.mvc.entities.vo.InventoryVO;
+import br.com.feliciano.mvc.domain.entities.Category;
+import br.com.feliciano.mvc.domain.entities.Inventory;
+import br.com.feliciano.mvc.domain.entities.Product;
+import br.com.feliciano.mvc.domain.entities.vo.InventoryVO;
 import br.com.feliciano.mvc.view.utils.BuilderLayout;
 import br.com.feliciano.mvc.view.utils.InputValidation;
 import br.com.feliciano.mvc.view.utils.Message;
 
-public class InventoryFrame extends JFrame {
+public class InventoryView extends JFrame {
 
 	@Serial
 	private static final long serialVersionUID = -3290552204306899863L;
@@ -63,7 +63,7 @@ public class InventoryFrame extends JFrame {
 	private JLabel priceTotalLabel;
 	private DefaultTableModel model;
 
-	public InventoryFrame() {
+	public InventoryView() {
 		super("INVENTORY MVC");
 		categoryController = new CategoryController();
 		productController = new ProductController();
@@ -93,17 +93,17 @@ public class InventoryFrame extends JFrame {
 		pageBeforeBtn.addActionListener(e -> System.out.println("pageBeforeBtn"));
 		pageNextBtn.addActionListener(e -> System.out.println("pageNextBtn"));
 		categoryManagerBtn.addActionListener(e -> {
-			CategoryFrame categoryFrame = new CategoryFrame();
-			categoryFrame.setVisible(true);
+			CategoryView categoryView = new CategoryView();
+			categoryView.setVisible(true);
 		});
 
 		prodManagerBtn.addActionListener(e -> {
-			ProductFrame productFrame = new ProductFrame();
-			productFrame.setVisible(true);
+			ProductView productView = new ProductView();
+			productView.setVisible(true);
 		});
 
 		editUserBtn.addActionListener(e -> {
-			Profile login = new Profile();
+			ProfileView login = new ProfileView();
 			login.setVisible(true);
 		});
 		quantityTxt.addKeyListener(new KeyAdapter() {

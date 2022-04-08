@@ -3,9 +3,9 @@ package br.com.feliciano.mvc.controller;
 import java.sql.Connection;
 import java.util.List;
 
-import br.com.feliciano.mvc.dao.CategoryDAO;
-import br.com.feliciano.mvc.entities.Category;
+import br.com.feliciano.mvc.domain.entities.Category;
 import br.com.feliciano.mvc.infra.ConnectionFactory;
+import br.com.feliciano.mvc.infra.dao.CategoryDAO;
 
 public class CategoryController {
 

@@ -1,4 +1,4 @@
-package br.com.feliciano.mvc.dao;
+package br.com.feliciano.mvc.infra.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,8 +8,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.feliciano.mvc.entities.Inventory;
-import br.com.feliciano.mvc.entities.vo.InventoryVO;
+import br.com.feliciano.mvc.domain.entities.Inventory;
+import br.com.feliciano.mvc.domain.entities.vo.InventoryVO;
 import br.com.feliciano.mvc.infra.Query;
 
 public class InventoryDAO {

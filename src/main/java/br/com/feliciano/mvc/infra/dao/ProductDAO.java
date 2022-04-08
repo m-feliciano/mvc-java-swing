@@ -1,4 +1,4 @@
-package br.com.feliciano.mvc.dao;
+package br.com.feliciano.mvc.infra.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,7 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.feliciano.mvc.entities.Product;
+import br.com.feliciano.mvc.domain.entities.Product;
 import br.com.feliciano.mvc.infra.Query;
 
 public class ProductDAO {

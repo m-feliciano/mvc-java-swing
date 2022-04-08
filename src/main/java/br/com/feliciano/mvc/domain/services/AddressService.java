@@ -1,4 +1,4 @@
-package br.com.feliciano.mvc.services;
+package br.com.feliciano.mvc.domain.services;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -7,7 +7,7 @@ import java.net.URL;
 
 import com.google.gson.Gson;
 
-import br.com.feliciano.mvc.entities.Address;
+import br.com.feliciano.mvc.domain.entities.Address;
 
 public class AddressService {
 

@@ -3,10 +3,10 @@ package br.com.feliciano.mvc.controller;
 import java.sql.Connection;
 import java.util.List;
 
-import br.com.feliciano.mvc.dao.InventoryDAO;
-import br.com.feliciano.mvc.entities.Inventory;
-import br.com.feliciano.mvc.entities.vo.InventoryVO;
+import br.com.feliciano.mvc.domain.entities.Inventory;
+import br.com.feliciano.mvc.domain.entities.vo.InventoryVO;
 import br.com.feliciano.mvc.infra.ConnectionFactory;
+import br.com.feliciano.mvc.infra.dao.InventoryDAO;
 
 public class InventoryController {
 

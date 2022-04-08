@@ -1,4 +1,4 @@
-package br.com.feliciano.mvc.entities;
+package br.com.feliciano.mvc.domain.entities;
 
 import java.util.List;
 

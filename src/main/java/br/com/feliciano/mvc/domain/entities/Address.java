@@ -1,6 +1,6 @@
-package br.com.feliciano.mvc.entities;
+package br.com.feliciano.mvc.domain.entities;
 
-import br.com.feliciano.mvc.services.AddressService;
+import br.com.feliciano.mvc.domain.services.AddressService;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

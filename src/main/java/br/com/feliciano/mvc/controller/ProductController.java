@@ -3,9 +3,9 @@ package br.com.feliciano.mvc.controller;
 import java.sql.Connection;
 import java.util.List;
 
-import br.com.feliciano.mvc.dao.ProductDAO;
-import br.com.feliciano.mvc.entities.Product;
+import br.com.feliciano.mvc.domain.entities.Product;
 import br.com.feliciano.mvc.infra.ConnectionFactory;
+import br.com.feliciano.mvc.infra.dao.ProductDAO;
 
 public class ProductController {
 
