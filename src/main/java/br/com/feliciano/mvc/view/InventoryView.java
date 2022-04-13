@@ -230,9 +230,6 @@ public class InventoryView extends JFrame {
 		int[] cleanBounds = { 135, 280, 80, 25 };
 		BuilderLayout.addButton(container, cleanBtn, cleanBounds, new Color(108, 117, 125), Color.WHITE);
 
-		refreshTableBtn = new JButton("Refresh");
-		int[] refreshTableBounds = { 225, 280, 80, 25 };
-		BuilderLayout.addButton(container, refreshTableBtn, refreshTableBounds);
 
 		deleteBtn = new JButton("Delete");
 		int[] deleteBtnBounds = { 45, 500, 80, 25 };
@@ -241,6 +238,10 @@ public class InventoryView extends JFrame {
 		editBtn = new JButton("Update");
 		int[] editBtnBounds = { 45 + 90, 500, 80, 25 };
 		BuilderLayout.addButton(container, editBtn, editBtnBounds, new Color(255, 197, 7), Color.WHITE);
+
+		refreshTableBtn = new JButton("Refresh");
+		int[] refreshTableBounds = { 225, 500, 80, 25 };
+		BuilderLayout.addButton(container, refreshTableBtn, refreshTableBounds);
 
 		pageBeforeBtn = new JButton("<");
 		int[] pageBeforeBtnBounds = { 340, 500, 50, 25 };

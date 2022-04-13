@@ -1,12 +1,50 @@
 # CRUD-Tarefas
 
-Controle de estroque utilizando padrão MVC, Java, Swing, PostgreSQL.
+Controle de estroque utilizando padrão MVC, Java, Swing, PostgreSQL e Lombok(códigos boilerplate).
 
 ---
 
 Neste exemplo, a utilização é do banco de dados PostgreSQL executando em um container Docker.
 
 Caso ja conheça bancos de dados relacionais, utilize o arquivo DDL.sql
+
+## Layout Desktop
+
+![Layout do aplicativo usando java Swing](https://i.ibb.co/VD1Cftb/Capture-java.png)
+
+## Estrutura de diretorios
+
+```
+
+C:.
+├───main
+│   └───java
+│       └───br
+│           └───com
+│               └───feliciano
+│                   └───mvc
+│                       ├───application
+│                       ├───controller
+│                       ├───domain
+│                       │   ├───entities
+│                       │   │   └───vo
+│                       │   └───services
+│                       ├───infra
+│                       │   ├───dao
+│                       │   └───exceptions
+│                       └───view
+│                           └───utils
+└───test
+    └───java
+        └───br
+            └───com
+                └───feliciano
+                    └───mvc
+                        ├───domain
+                        │   ├───entities
+                        │   └───services
+                        └───infra
+```
 
 ## Passo a passo
 
