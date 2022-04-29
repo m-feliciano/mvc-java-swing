@@ -10,7 +10,7 @@ Caso ja conheça bancos de dados relacionais, utilize o arquivo DDL.sql
 
 ## Layout Desktop
 
-![Layout do aplicativo usando java Swing](https://i.ibb.co/VD1Cftb/Capture-java.png)
+![Layout do aplicativo usando java Swing](https://i.ibb.co/rwGNF9n/java-jdbc.png)
 
 ## Estrutura de diretorios
 

@@ -126,9 +126,9 @@ public class InventoryView extends JFrame {
 
 	private void buildFrame(Container container) {
 		final int CONTAINER_HORIZONTAL_SIZE = 800;
-		final int CONTAINER_VERTICAL_SIZE = 590;
+		final int CONTAINER_VERTICAL_SIZE = 630;
 
-		buildProductCategory(container);
+		buildInventory(container);
 		buildComboCategory(container);
 		buildInputs(container);
 		buildButtons(container);
@@ -140,7 +140,7 @@ public class InventoryView extends JFrame {
 		setLocationRelativeTo(null);
 	}
 
-	private void buildProductCategory(Container container) {
+	private void buildInventory(Container container) {
 		productCombo = new JComboBox<>();
 		productCombo.setBounds(45, 60, 210, 25);
 		container.add(productCombo);
@@ -197,7 +197,7 @@ public class InventoryView extends JFrame {
 		// TOTAL DOC
 		priceTotalLabel = new JLabel();
 		priceTotalLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		int[] priceTotalBounds = { 500, 500, 200, 25 };
+		int[] priceTotalBounds = { 500, 540, 200, 25 };
 		BuilderLayout.addLabel(container, priceTotalLabel, priceTotalBounds, null, Color.BLACK);
 	}
 
@@ -230,29 +230,31 @@ public class InventoryView extends JFrame {
 		int[] cleanBounds = { 135, 280, 80, 25 };
 		BuilderLayout.addButton(container, cleanBtn, cleanBounds, new Color(108, 117, 125), Color.WHITE);
 
-
 		deleteBtn = new JButton("Delete");
-		int[] deleteBtnBounds = { 45, 500, 80, 25 };
+		int[] deleteBtnBounds = { 45, 540, 80, 25 };
 		BuilderLayout.addButton(container, deleteBtn, deleteBtnBounds, new Color(220, 53, 69), Color.WHITE);
 
 		editBtn = new JButton("Update");
-		int[] editBtnBounds = { 45 + 90, 500, 80, 25 };
+		int[] editBtnBounds = { 45 + 90, 540, 80, 25 };
 		BuilderLayout.addButton(container, editBtn, editBtnBounds, new Color(255, 197, 7), Color.WHITE);
 
 		refreshTableBtn = new JButton("Refresh");
-		int[] refreshTableBounds = { 225, 500, 80, 25 };
+		int[] refreshTableBounds = { 225, 540, 80, 25 };
 		BuilderLayout.addButton(container, refreshTableBtn, refreshTableBounds);
 
 		pageBeforeBtn = new JButton("<");
-		int[] pageBeforeBtnBounds = { 340, 500, 50, 25 };
+		int[] pageBeforeBtnBounds = { 340, 540, 50, 25 };
 		BuilderLayout.addButton(container, pageBeforeBtn, pageBeforeBtnBounds, LIGHT_BUTTON, null);
 
 		pageNextBtn = new JButton(">");
-		int[] pageNextBtnBounds = { 400, 500, 50, 25 };
+		int[] pageNextBtnBounds = { 400, 540, 50, 25 };
 		BuilderLayout.addButton(container, pageNextBtn, pageNextBtnBounds, LIGHT_BUTTON, null);
 	}
 
 	private void buildTable(Container container) {
+		
+		buildTableTitle(container);
+
 		this.model = new DefaultTableModel() {
 			@Serial
 			private static final long serialVersionUID = 1L;
@@ -311,8 +313,47 @@ public class InventoryView extends JFrame {
 		cellCenterNotEnabled.setEnabled(false);
 		table.getColumnModel().getColumn(0).setCellRenderer(cellCenterNotEnabled);
 
-		table.setBounds(45, 330, 700, 150);
+		table.setBounds(45, 352, 700, 150);
 		container.add(table);
+	}
+
+	private void buildTableTitle(Container container) {
+		final JLabel inventoryIdLabel = new JLabel("ID");
+		int[] inventoryIdBounds = { 50, 330, 40, 20 };
+		BuilderLayout.addLabel(container, inventoryIdLabel, inventoryIdBounds, Color.LIGHT_GRAY, Color.BLACK);
+
+		final JLabel productIdLabel = new JLabel("ProdID");
+		int[] productIdBounds = { 85, 330, 40, 20 };
+		BuilderLayout.addLabel(container, productIdLabel, productIdBounds, Color.LIGHT_GRAY, Color.BLACK);
+
+		final JLabel productNameLabel = new JLabel("ProdName");
+		int[] productNameBounds = { 150, 330, 80, 20 };
+		BuilderLayout.addLabel(container, productNameLabel, productNameBounds, Color.LIGHT_GRAY, Color.BLACK);
+
+		final JLabel productPriceNameLabel = new JLabel("ProdPrice");
+		int[] productPriceNameBounds = { 275, 330, 80, 20 };
+		BuilderLayout.addLabel(container, productPriceNameLabel, productPriceNameBounds, Color.LIGHT_GRAY, Color.BLACK);
+
+		final JLabel catIdLabel = new JLabel("CatID");
+		int[] catIdBounds = { 355, 330, 40, 20 };
+		BuilderLayout.addLabel(container, catIdLabel, catIdBounds, Color.LIGHT_GRAY, Color.BLACK);
+
+		final JLabel catNameLabel = new JLabel("CatName");
+		int[] catNameBounds = { 410, 330, 80, 20 };
+		BuilderLayout.addLabel(container, catNameLabel, catNameBounds, Color.LIGHT_GRAY, Color.BLACK);
+
+		final JLabel quantityLabel = new JLabel("Qty");
+		int[] quantityBounds = { 500, 330, 40, 20 };
+		BuilderLayout.addLabel(container, quantityLabel, quantityBounds, Color.LIGHT_GRAY, Color.BLACK);
+		
+		final JLabel priceLabel = new JLabel("Price in Stock");
+		int[] priceBounds = { 535, 330, 80, 20 };
+		BuilderLayout.addLabel(container, priceLabel, priceBounds, Color.LIGHT_GRAY, Color.BLACK);
+		
+		final JLabel descriptionLabel = new JLabel("Description");
+		int[] descriptionBounds = { 635, 330, 80, 20 };
+		BuilderLayout.addLabel(container, descriptionLabel, descriptionBounds, Color.LIGHT_GRAY, Color.BLACK);
+		
 	}
 
 	private void update() {
