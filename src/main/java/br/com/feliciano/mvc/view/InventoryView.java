@@ -44,6 +44,10 @@ public class InventoryView extends JFrame {
 	private final transient CategoryController categoryController;
 	private final transient InventoryController inventoryController;
 	private JTextField descriptionTxt;
+
+	private JTextField findByDescriptionTxt;
+	private JButton findByDescriptionBtn;
+
 	private JTextField quantityTxt;
 	private JComboBox<Category> categoryCombo;
 	private JComboBox<Product> productCombo;
@@ -72,6 +76,9 @@ public class InventoryView extends JFrame {
 		setLayout(null);
 		buildFrame(container);
 
+		cleanBtn.addActionListener(e -> cleanInputs());
+		deleteBtn.addActionListener(e -> delete());
+		editBtn.addActionListener(e -> update());
 		saveBtn.addActionListener(e -> {
 			if (save()) {
 				cleanInputs();
@@ -79,19 +86,31 @@ public class InventoryView extends JFrame {
 			}
 		});
 
-		deleteBtn.addActionListener(e -> {
-			delete();
-			updateTable();
+		findByDescriptionBtn.addActionListener(e -> {
+			filterTable();
+		});
+		refreshComboCategoryBtn.addActionListener(e -> updateComboCategory());
+		refreshComboProductBtn.addActionListener(e -> updateComboProduct());
+		refreshTableBtn.addActionListener(e -> updateTable());
+				
+		quantityTxt.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent EVT) {
+				boolean valid = ((EVT.getKeyChar() >= '0' && EVT.getKeyChar() <= '9') || EVT.getKeyChar() == '.'
+						|| EVT.getKeyChar() == '\b');
+				if (!valid) {
+					Message.showError("Please enter numeric value only");
+					quantityTxt.setText("");
+				}
+			}
 		});
 
-		editBtn.addActionListener(e -> {
-			update();
-			updateTable();
-		});
-
-		cleanBtn.addActionListener(e -> cleanInputs());
+		
 		pageBeforeBtn.addActionListener(e -> System.out.println("pageBeforeBtn"));
 		pageNextBtn.addActionListener(e -> System.out.println("pageNextBtn"));
+		
+		populateTable();
+		
 		categoryManagerBtn.addActionListener(e -> {
 			CategoryView categoryView = new CategoryView();
 			categoryView.setVisible(true);
@@ -106,21 +125,135 @@ public class InventoryView extends JFrame {
 			ProfileView login = new ProfileView();
 			login.setVisible(true);
 		});
-		quantityTxt.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyReleased(KeyEvent EVT) {
-				boolean valid = ((EVT.getKeyChar() >= '0' && EVT.getKeyChar() <= '9') || EVT.getKeyChar() == '.'
-						|| EVT.getKeyChar() == '\b');
-				if (!valid) {
-					Message.showError("Please enter numeric value only");
-					quantityTxt.setText("");
-				}
-			}
-		});
+	}
 
-		refreshComboCategoryBtn.addActionListener(e -> updateComboCategory());
-		refreshComboProductBtn.addActionListener(e -> updateComboProduct());
-		refreshTableBtn.addActionListener(e -> updateTable());
+	private void updateComboCategory() {
+		categoryCombo.removeAllItems();
+		List<Category> categories = categoryController.list();
+		categories.forEach(c -> categoryCombo.addItem(c));
+	}
+
+	private void updateComboProduct() {
+		productCombo.removeAllItems();
+		List<Product> products = productController.list();
+		products.forEach(c -> productCombo.addItem(c));
+	}
+
+	private void filterTable() {
+		List<InventoryVO> inventoriesVo = inventoryController.findByDescription(findByDescriptionTxt.getText());
+		int totalRows = model.getRowCount();
+		for (int i = 0; i < totalRows; i++) {
+			model.removeRow(0);
+		}
+		inventoriesVo.forEach(item -> model.addRow(createRow(item)));
+
+	}
+
+	private void update() {
+		Object obj = getInputObject();
+		if (obj instanceof Integer id) {
+			int prodId = (int) getValueAtColumn(1);
+			int catId = (int) getValueAtColumn(4);
+			int quantity = (int) getValueAtColumn(6);
+			String description = getValueAtColumn(8).toString();
+			int inventoryId = (int) getValueAtColumn(0);
+			Inventory inventory = new Inventory(prodId, catId, quantity, description);
+			inventory.setId(inventoryId);
+			this.inventoryController.update(inventory);
+			Message.showMessage("successfully updated item id: " + id);
+		}
+	}
+	
+	private Object getValueAtColumn(int column) {
+		int row = table.getSelectedRow();
+		String resultado = model.getValueAt(row, column).toString();
+		
+		boolean isNumeric = resultado.chars().allMatch(Character::isDigit);
+		if(isNumeric) {
+			return Integer.parseInt(resultado);
+		}
+		return resultado;
+	}
+
+	private Object getInputObject() {
+		try {
+			return model.getValueAt(table.getSelectedRow(), 0);
+		} catch (Exception e) {
+			Message.showError("Please select a row");
+		}
+		return null;
+	}
+
+	private void delete() {
+		Object obj = getInputObject();
+		if (obj instanceof Integer id) {
+			inventoryController.delete(id);
+			model.removeRow(table.getSelectedRow());
+			Message.showMessage("successfully deleted item id: " + id);
+		}
+	}
+
+	private boolean save() {
+		if (!InputValidation.validate(descriptionTxt)) {
+			Message.showError("must provider a description!");
+			return false;
+		}
+		if (!InputValidation.validate(quantityTxt)) {
+			Message.showError("must provider a quantity!");
+			return false;
+		}
+		Category category = (Category) categoryCombo.getSelectedItem();
+		Product product = (Product) productCombo.getSelectedItem();
+		assert product != null;
+		assert category != null;
+		Inventory inventory = new Inventory(product.getId(), category.getId(), Integer.parseInt(quantityTxt.getText()),
+				descriptionTxt.getText());
+		this.inventoryController.save(inventory);
+		Message.showMessage("successfully saved");
+		return true;
+	}
+
+	private void populateTable() {
+		List<InventoryVO> inventoriesVo = inventoryController.list();
+		inventoriesVo.forEach(e -> model.addRow(createRow(e)));
+
+		Optional<BigDecimal> totalPrice = inventoriesVo
+				.stream()
+				.map(this::getTotalPrice)
+				.reduce(BigDecimal::add);
+
+		if (totalPrice.isPresent() && totalPrice.get().compareTo(BigDecimal.ONE) > 0) {
+			priceTotalLabel.setText("Document price: R$" + totalPrice.get());
+		}
+	}
+
+	private Object[] createRow(InventoryVO inventoryVO) {
+		return new Object[] { 
+				inventoryVO.getId(), 
+				inventoryVO.getProductId(), 
+				inventoryVO.getProductName(),
+				"R$" + inventoryVO.getProductPrice(),
+				inventoryVO.getCategoryId(), 
+				inventoryVO.getCategoryName(),
+				inventoryVO.getQuantity(), 
+				"R$" + getTotalPrice(inventoryVO), 
+				inventoryVO.getDescription()
+			};
+	}
+
+	private BigDecimal getTotalPrice(InventoryVO e) {
+		return e.getProductPrice().multiply(new BigDecimal(e.getQuantity()));
+	}
+
+	private void cleanInputs() {
+		this.descriptionTxt.setText("");
+		this.quantityTxt.setText("");
+		this.categoryCombo.setSelectedIndex(0);
+		this.productCombo.setSelectedIndex(0);
+	}
+
+	private void updateTable() {
+		model.getDataVector().removeAllElements();
 		populateTable();
 	}
 
@@ -154,18 +287,6 @@ public class InventoryView extends JFrame {
 		updateComboCategory();
 	}
 
-	private void updateComboCategory() {
-		categoryCombo.removeAllItems();
-		List<Category> categories = categoryController.list();
-		categories.forEach(c -> categoryCombo.addItem(c));
-	}
-
-	private void updateComboProduct() {
-		productCombo.removeAllItems();
-		List<Product> products = productController.list();
-		products.forEach(c -> productCombo.addItem(c));
-	}
-
 	private void buildInputs(Container container) {
 		// DESCRIPTION
 		JLabel descriptionLabel = new JLabel("DESCRIPTION");
@@ -174,6 +295,14 @@ public class InventoryView extends JFrame {
 		descriptionTxt = new JTextField();
 		descriptionTxt.setBounds(45, 185, 320, 25);
 		container.add(descriptionTxt);
+
+		// FIND BY DESCRIPTION
+		JLabel findByDescriptionLabel = new JLabel("FIND BY DESCRIPTION");
+		int[] findByDescriptionBounds = { 300, 280, 140, 25 };
+		BuilderLayout.addLabel(container, findByDescriptionLabel, findByDescriptionBounds, null, Color.BLACK);
+		findByDescriptionTxt = new JTextField();
+		findByDescriptionTxt.setBounds(450, 280, 160, 25);
+		container.add(findByDescriptionTxt);
 
 		// QUANTITY
 		JLabel quantityLabel = new JLabel("QUANTITY");
@@ -249,10 +378,14 @@ public class InventoryView extends JFrame {
 		pageNextBtn = new JButton(">");
 		int[] pageNextBtnBounds = { 400, 540, 50, 25 };
 		BuilderLayout.addButton(container, pageNextBtn, pageNextBtnBounds, LIGHT_BUTTON, null);
+
+		findByDescriptionBtn = new JButton("Search");
+		int[] findByDescriptionBtnBounds = { 620, 280, 80, 25 };
+		BuilderLayout.addButton(container, findByDescriptionBtn, findByDescriptionBtnBounds);
 	}
 
 	private void buildTable(Container container) {
-		
+
 		buildTableTitle(container);
 
 		this.model = new DefaultTableModel() {
@@ -345,99 +478,14 @@ public class InventoryView extends JFrame {
 		final JLabel quantityLabel = new JLabel("Qty");
 		int[] quantityBounds = { 500, 330, 40, 20 };
 		BuilderLayout.addLabel(container, quantityLabel, quantityBounds, Color.LIGHT_GRAY, Color.BLACK);
-		
+
 		final JLabel priceLabel = new JLabel("Price in Stock");
 		int[] priceBounds = { 535, 330, 80, 20 };
 		BuilderLayout.addLabel(container, priceLabel, priceBounds, Color.LIGHT_GRAY, Color.BLACK);
-		
+
 		final JLabel descriptionLabel = new JLabel("Description");
 		int[] descriptionBounds = { 635, 330, 80, 20 };
 		BuilderLayout.addLabel(container, descriptionLabel, descriptionBounds, Color.LIGHT_GRAY, Color.BLACK);
-		
-	}
 
-	private void update() {
-		Object obj = getInputObject();
-		if (obj instanceof Integer id) {
-			int prodId = Integer.parseInt(model.getValueAt(table.getSelectedRow(), 1).toString());
-			int catId = Integer.parseInt(model.getValueAt(table.getSelectedRow(), 4).toString());
-			int quantity = Integer.parseInt(model.getValueAt(table.getSelectedRow(), 6).toString());
-			String description = (String) model.getValueAt(table.getSelectedRow(), 8);
-			int inventoryId = Integer.parseInt(model.getValueAt(table.getSelectedRow(), 0).toString());
-			Inventory inventory = new Inventory(prodId, catId, quantity, description);
-			inventory.setId(inventoryId);
-			this.inventoryController.update(inventory);
-			Message.showMessage("successfully updated item id: " + id);
-		}
-	}
-
-	private Object getInputObject() {
-		try {
-			return model.getValueAt(table.getSelectedRow(), 0);
-		} catch (Exception e) {
-			Message.showError("Please select a row");
-		}
-		return null;
-	}
-
-	private void delete() {
-		Object obj = getInputObject();
-		if (obj instanceof Integer id) {
-			inventoryController.delete(id);
-			model.removeRow(table.getSelectedRow());
-			Message.showMessage("successfully deleted item id: " + id);
-		}
-	}
-
-	private boolean save() {
-		if (!InputValidation.validate(descriptionTxt)) {
-			Message.showError("must provider a description!");
-			return false;
-		}
-		if (!InputValidation.validate(quantityTxt)) {
-			Message.showError("must provider a quantity!");
-			return false;
-		}
-		Category category = (Category) categoryCombo.getSelectedItem();
-		Product product = (Product) productCombo.getSelectedItem();
-		assert product != null;
-		assert category != null;
-		Inventory inventory = new Inventory(product.getId(), category.getId(), Integer.parseInt(quantityTxt.getText()),
-				descriptionTxt.getText());
-		this.inventoryController.save(inventory);
-		Message.showMessage("successfully saved");
-		return true;
-	}
-
-	private void populateTable() {
-		List<InventoryVO> inventoriesVo = inventoryController.list();
-		inventoriesVo.forEach(e -> model.addRow(new Object[] { e.getId(), e.getProductId(), e.getProductName(),
-				"R$" + e.getProductPrice(), e.getCategoryId(), e.getCategoryName(), e.getQuantity(),
-				"R$" + getTotalPrice(e), e.getDescription() }));
-
-		Optional<BigDecimal> totalPrice = inventoriesVo.stream().map(this::getTotalPrice).reduce(BigDecimal::add);
-		if (totalPrice.isPresent() && totalPrice.get().compareTo(BigDecimal.ONE) > 0) {
-			priceTotalLabel.setText("Document price: R$" + totalPrice.get());
-		}
-	}
-
-	private BigDecimal getTotalPrice(InventoryVO e) {
-		return e.getProductPrice().multiply(new BigDecimal(e.getQuantity()));
-	}
-
-	private void cleanInputs() {
-		this.descriptionTxt.setText("");
-		this.quantityTxt.setText("");
-		this.categoryCombo.setSelectedIndex(0);
-		this.productCombo.setSelectedIndex(0);
-	}
-
-	private void updateTable() {
-		cleanTable();
-		populateTable();
-	}
-
-	private void cleanTable() {
-		model.getDataVector().removeAllElements();
 	}
 }

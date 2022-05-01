@@ -59,6 +59,7 @@ public class ProfileView extends JFrame {
         String number = numberTxt.getText();
         Integer userId = Integer.parseInt(userIdTxt.getText());
         Address address = new Address(cep, number, userId);
+      
         this.addressController.update(address);
     }
 

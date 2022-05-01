@@ -49,15 +49,7 @@ public class InventoryDAO {
 			List<InventoryVO> inventoriesVo = new ArrayList<>();
 			InventoryVO inventoryVo;
 			while (rs.next()) {
-				inventoryVo = new InventoryVO();
-				inventoryVo.setId(rs.getInt("id"));
-				inventoryVo.setProductId(rs.getInt("p_id"));
-				inventoryVo.setProductName(rs.getString("p_name"));
-				inventoryVo.setProductPrice(rs.getBigDecimal("p_price"));
-				inventoryVo.setCategoryId(rs.getInt("c_id"));
-				inventoryVo.setCategoryName(rs.getString("c_name"));
-				inventoryVo.setQuantity(rs.getInt("quantity"));
-				inventoryVo.setDescription(rs.getString("description"));
+				inventoryVo = instantiateVO(rs);
 				inventoriesVo.add(inventoryVo);
 			}
 			return inventoriesVo;
@@ -115,5 +107,38 @@ public class InventoryDAO {
 		} catch (SQLException e) {
 			throw new RuntimeException(e.getMessage());
 		}
+	}
+
+	public List<InventoryVO> findByDescription(String description) {
+		try (PreparedStatement ps = conn.prepareStatement(Query.SQL_INVENTORY_SELECT_LIST_JOIN_BY_DESCRIPTION)) {
+			ps.setString(1, "%" + description + "%");
+			ResultSet rs = ps.executeQuery();
+			List<InventoryVO> inventoriesVo = new ArrayList<>();
+			InventoryVO inventoryVo;
+			while (rs.next()) {
+				inventoryVo = instantiateVO(rs);
+				inventoriesVo.add(inventoryVo);
+			}
+			return inventoriesVo;
+		} catch (SQLException e) {
+			throw new RuntimeException(e.getMessage());
+		}
+	}
+
+	private InventoryVO instantiateVO(ResultSet rs) {
+		InventoryVO vo = new InventoryVO();
+		try {
+			vo.setId(rs.getInt("id"));
+			vo.setProductId(rs.getInt("p_id"));
+			vo.setProductName(rs.getString("p_name"));
+			vo.setProductPrice(rs.getBigDecimal("p_price"));
+			vo.setCategoryId(rs.getInt("c_id"));
+			vo.setCategoryName(rs.getString("c_name"));
+			vo.setQuantity(rs.getInt("quantity"));
+			vo.setDescription(rs.getString("description"));
+		} catch (Exception e) {
+			throw new RuntimeException("cannot instantiate itens from current resultset.");
+		}
+		return vo;
 	}
 }

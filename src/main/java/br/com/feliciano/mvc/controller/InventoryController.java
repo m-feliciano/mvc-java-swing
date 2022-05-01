@@ -32,5 +32,9 @@ public class InventoryController {
     public void update(Inventory inventory) {
         this.inventoryDAO.update(inventory);
     }
+    
+    public List<InventoryVO> findByDescription(String description) {
+		return this.inventoryDAO.findByDescription(description);
+    }
 
 }
