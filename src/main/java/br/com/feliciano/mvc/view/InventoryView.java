@@ -29,7 +29,7 @@ import br.com.feliciano.mvc.controller.ProductController;
 import br.com.feliciano.mvc.domain.entities.Category;
 import br.com.feliciano.mvc.domain.entities.Inventory;
 import br.com.feliciano.mvc.domain.entities.Product;
-import br.com.feliciano.mvc.domain.entities.vo.InventoryVO;
+import br.com.feliciano.mvc.dto.InventoryDTO;
 import br.com.feliciano.mvc.view.utils.BuilderLayout;
 import br.com.feliciano.mvc.view.utils.InputValidation;
 import br.com.feliciano.mvc.view.utils.Message;
@@ -140,7 +140,7 @@ public class InventoryView extends JFrame {
 	}
 
 	private void filterTable() {
-		List<InventoryVO> inventoriesVo = inventoryController.findByDescription(findByDescriptionTxt.getText());
+		List<InventoryDTO> inventoriesVo = inventoryController.findByDescription(findByDescriptionTxt.getText());
 		int totalRows = model.getRowCount();
 		for (int i = 0; i < totalRows; i++) {
 			model.removeRow(0);
@@ -214,7 +214,7 @@ public class InventoryView extends JFrame {
 	}
 
 	private void populateTable() {
-		List<InventoryVO> inventoriesVo = inventoryController.list();
+		List<InventoryDTO> inventoriesVo = inventoryController.list();
 		inventoriesVo.forEach(e -> model.addRow(createRow(e)));
 
 		Optional<BigDecimal> totalPrice = inventoriesVo
@@ -227,21 +227,21 @@ public class InventoryView extends JFrame {
 		}
 	}
 
-	private Object[] createRow(InventoryVO inventoryVO) {
+	private Object[] createRow(InventoryDTO inventoryDTO) {
 		return new Object[] { 
-				inventoryVO.getId(), 
-				inventoryVO.getProductId(), 
-				inventoryVO.getProductName(),
-				"R$" + inventoryVO.getProductPrice(),
-				inventoryVO.getCategoryId(), 
-				inventoryVO.getCategoryName(),
-				inventoryVO.getQuantity(), 
-				"R$" + getTotalPrice(inventoryVO), 
-				inventoryVO.getDescription()
+				inventoryDTO.getId(), 
+				inventoryDTO.getProductId(), 
+				inventoryDTO.getProductName(),
+				"R$" + inventoryDTO.getProductPrice(),
+				inventoryDTO.getCategoryId(), 
+				inventoryDTO.getCategoryName(),
+				inventoryDTO.getQuantity(), 
+				"R$" + getTotalPrice(inventoryDTO), 
+				inventoryDTO.getDescription()
 			};
 	}
 
-	private BigDecimal getTotalPrice(InventoryVO e) {
+	private BigDecimal getTotalPrice(InventoryDTO e) {
 		return e.getProductPrice().multiply(new BigDecimal(e.getQuantity()));
 	}
 

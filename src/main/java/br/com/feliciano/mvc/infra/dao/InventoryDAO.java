@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.feliciano.mvc.domain.entities.Inventory;
-import br.com.feliciano.mvc.domain.entities.vo.InventoryVO;
+import br.com.feliciano.mvc.dto.InventoryDTO;
 import br.com.feliciano.mvc.infra.Query;
 
 public class InventoryDAO {
@@ -43,11 +43,11 @@ public class InventoryDAO {
 //        }
 //    }
 
-	public List<InventoryVO> list() {
+	public List<InventoryDTO> list() {
 		try (PreparedStatement ps = conn.prepareStatement(Query.SQL_INVENTORY_SELECT_LIST_JOIN)) {
 			ResultSet rs = ps.executeQuery();
-			List<InventoryVO> inventoriesVo = new ArrayList<>();
-			InventoryVO inventoryVo;
+			List<InventoryDTO> inventoriesVo = new ArrayList<>();
+			InventoryDTO inventoryVo;
 			while (rs.next()) {
 				inventoryVo = instantiateVO(rs);
 				inventoriesVo.add(inventoryVo);
@@ -109,12 +109,12 @@ public class InventoryDAO {
 		}
 	}
 
-	public List<InventoryVO> findByDescription(String description) {
+	public List<InventoryDTO> findByDescription(String description) {
 		try (PreparedStatement ps = conn.prepareStatement(Query.SQL_INVENTORY_SELECT_LIST_JOIN_BY_DESCRIPTION)) {
 			ps.setString(1, "%" + description + "%");
 			ResultSet rs = ps.executeQuery();
-			List<InventoryVO> inventoriesVo = new ArrayList<>();
-			InventoryVO inventoryVo;
+			List<InventoryDTO> inventoriesVo = new ArrayList<>();
+			InventoryDTO inventoryVo;
 			while (rs.next()) {
 				inventoryVo = instantiateVO(rs);
 				inventoriesVo.add(inventoryVo);
@@ -125,8 +125,8 @@ public class InventoryDAO {
 		}
 	}
 
-	private InventoryVO instantiateVO(ResultSet rs) {
-		InventoryVO vo = new InventoryVO();
+	private InventoryDTO instantiateVO(ResultSet rs) {
+		InventoryDTO vo = new InventoryDTO();
 		try {
 			vo.setId(rs.getInt("id"));
 			vo.setProductId(rs.getInt("p_id"));

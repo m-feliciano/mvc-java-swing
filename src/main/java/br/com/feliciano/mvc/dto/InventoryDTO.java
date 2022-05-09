@@ -1,4 +1,4 @@
-package br.com.feliciano.mvc.domain.entities.vo;
+package br.com.feliciano.mvc.dto;
 
 import java.math.BigDecimal;
 
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class InventoryVO {
+public class InventoryDTO {
 
     private Integer id;
     private Integer productId;
@@ -22,9 +22,14 @@ public class InventoryVO {
 
     @Override
 	public String toString() {
-		return "InventoryVO [id=" + id + ", productId=" + productId + ", categoryId=" + categoryId + ", quantity="
-				+ quantity + ", productName=" + productName + ", productPrice=" + productPrice + ", categoryName="
-				+ categoryName + ", description=" + description + "]";
+		return "InventoryVO [id=" + id 
+				+ ", productId=" + productId 
+				+ ", categoryId=" + categoryId 
+				+ ", quantity=" + quantity 
+				+ ", productName=" + productName 
+				+ ", productPrice=" + productPrice 
+				+ ", categoryName=" + categoryName 
+				+ ", description=" + description + "]";
 	}
 
 
