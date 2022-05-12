@@ -6,9 +6,13 @@ import java.awt.Container;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 
+import com.mchange.util.AssertException;
+
 public class BuilderLayout {
 
-	private BuilderLayout() {}
+	private BuilderLayout() {
+		throw new AssertException("This class must not be instantiated.");
+	}
 
     public static void addLabel(Container container, JLabel label, int[] bounds) {
         label.setBounds(bounds[0], bounds[1], bounds[2], bounds[3]);

@@ -1,8 +1,11 @@
 package br.com.feliciano.mvc.infra;
 
+import com.mchange.util.AssertException;
+
 public class Query {
 
 	private Query() {
+		throw new AssertException("This class must not be instantiated.");
 	}
 
 	public static final String SQL_PRODUCTS_SELECT = "SELECT id, name, description, price, created_at FROM tb_product ORDER BY id";
@@ -14,13 +17,13 @@ public class Query {
 			SELECT id, name, description, price, created_at
 			FROM tb_product WHERE category_id = (SELECT id FROM tb_category WHERE name = ?)""";
 	public static final String SQL_PRODUCTS_BY_CATEGORY = """
-			SELECT 
-			c.id, 
-			c.name, 
-			p.id, 
-			p.name, 
-			p.description, 
-			p.price, 
+			SELECT
+			c.id,
+			c.name,
+			p.id,
+			p.name,
+			p.description,
+			p.price,
 			p.created_at
 				FROM tb_inventory i
 			INNER JOIN tb_product p ON i.product_id = p.id
@@ -58,7 +61,7 @@ public class Query {
 				INNER JOIN tb_category c ON c.id = category_id
 				ORDER BY i.id
 			""";
-	
+
 	public static final String SQL_INVENTORY_SELECT_LIST_JOIN_BY_DESCRIPTION = """
 			SELECT
 				i.id,

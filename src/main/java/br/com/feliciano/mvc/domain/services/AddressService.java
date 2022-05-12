@@ -6,12 +6,15 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import com.google.gson.Gson;
+import com.mchange.util.AssertException;
 
 import br.com.feliciano.mvc.domain.entities.Address;
 
 public class AddressService {
 
-    private AddressService() {}
+    private AddressService() {
+    	throw new AssertException("This class must not be instantiated.");
+    }
 
     private static final String webService = "http://viacep.com.br/ws/";
 
